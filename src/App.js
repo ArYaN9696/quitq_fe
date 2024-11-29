@@ -13,8 +13,9 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        {/* <Route path="*" element={<NotFoundPage />} />  For handling 404 Not Found */}
         <Route path="/dashboard" element={<Dashboard />} />
+        {/* <Route path="*" element={<NotFoundPage />} />  For handling 404 Not Found */}
+        
       </Routes>
     </Router>
   );

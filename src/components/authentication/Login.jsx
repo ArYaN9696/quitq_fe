@@ -3,6 +3,8 @@ import authService from "../../services/authService";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Dashboard from "../../pages/Dashboard";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -17,18 +19,39 @@ const Login = () => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     try {
+//       const { role, ...rest } = credentials;
+//       const data = await authService.login(role, rest);
+//       if (data.token) {
+//         navigate("/dashboard");
+//       }
+//     } catch (err) {
+//       setError("Invalid username or password");
+//     }
+//   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const { role, ...rest } = credentials;
       const data = await authService.login(role, rest);
       if (data.token) {
-        navigate("/dashboard");
+        navigate('/dashboard');
+
+        toast.success('User logged in successfully!', {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 5000, 
+        });
+
+        
       }
     } catch (err) {
-      setError("Invalid username or password");
+      setError('Invalid username or password');
     }
   };
+
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100">
@@ -91,6 +114,7 @@ const Login = () => {
           </button>
         </form>
       </div>
+      
     </div>
   );
 };
