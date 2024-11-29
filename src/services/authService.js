@@ -14,6 +14,7 @@ const axiosInstance = axios.create({
 const authService = {
   login: async (role, credentials) => {
     try {
+      console.log("Role being sent:", role);
       console.log('Sending login request:', {
         url: `${role}/login`,
         credentials
