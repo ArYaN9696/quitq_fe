@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCategories } from '../../redux/slices/categorySlice';
+import { fetchCategories } from '../../store/categorySlice';
 import { ToastContainer, toast } from 'react-toastify';
 
 const CategoryList = () => {
@@ -15,25 +15,60 @@ const CategoryList = () => {
     }
 
     if (error) {
-      toast.error(error);
+      toast.error(error, {
+        position: "top-right", 
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
-  }, [dispatch, status, error]);
+
+    if (status === 'succeeded' && categories.length === 0) {
+      toast.info('No categories available!', {
+        position: "top-right", 
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  }, [dispatch, status, error, categories.length]);
 
   return (
-    <div>
+    <div className="card p-4 shadow-sm">
       <ToastContainer />
-      <h2>Categories</h2>
-      {status === 'loading' && <p>Loading...</p>}
-      {status === 'succeeded' && (
-        <ul>
+      <h2 className="mb-4">Categories</h2>
+
+      {status === 'loading' && (
+        <div className="alert alert-info" role="alert">
+          Loading categories...
+        </div>
+      )}
+
+      {status === 'succeeded' && categories.length === 0 && (
+        <p>No categories available.</p>
+      )}
+
+      {status === 'succeeded' && categories.length > 0 && (
+        <ul className="list-group">
           {categories.map((category) => (
-            <li key={category.categoryId}>
+            <li key={category.categoryId} className="list-group-item">
               {category.categoryName}
             </li>
           ))}
         </ul>
       )}
-      {status === 'failed' && <p>Error loading categories.</p>}
+
+      {status === 'failed' && (
+        <div className="alert alert-danger" role="alert">
+          Error loading categories.
+        </div>
+      )}
     </div>
   );
 };

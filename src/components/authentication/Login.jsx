@@ -40,7 +40,7 @@ const Login = () => {
       if (data.token) {
         localStorage.setItem("jwt_token", data.token);
         localStorage.setItem("user_role", role);
-        navigate("/dashboard");
+        navigate("/CategoryPage");
         toast.success("User logged in successfully!", {
           position: toast.POSITION.TOP_RIGHT,
           autoClose: 5000,

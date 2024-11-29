@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { createCategory } from '../../redux/slices/categorySlice';
+import { createCategory } from '../../store/categorySlice';
 import { ToastContainer, toast } from 'react-toastify';
 
 const AddCategory = () => {
@@ -21,16 +21,25 @@ const AddCategory = () => {
   };
 
   return (
-    <div>
+    <div className="card p-4 shadow-sm">
       <ToastContainer />
-      <h3>Create a Category</h3>
-      <input 
-        type="text" 
-        value={categoryName} 
-        onChange={handleCategoryChange} 
-        placeholder="Category Name" 
-      />
-      <button onClick={handleCreateCategory}>Create Category</button>
+      <h3 className="mb-4">Create a Category</h3>
+      <div className="mb-3">
+        <input 
+          type="text" 
+          value={categoryName} 
+          onChange={handleCategoryChange} 
+          placeholder="Category Name" 
+          className="form-control" 
+        />
+      </div>
+      <button
+        onClick={handleCreateCategory}
+        className="btn btn-primary w-100"
+        disabled={!categoryName}
+      >
+        Create Category
+      </button>
     </div>
   );
 };
