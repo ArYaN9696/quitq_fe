@@ -7,6 +7,12 @@ const useAuth = () => {
     return { token, userRole };
   });
 
+  useEffect(() => {
+    const token = localStorage.getItem('jwt_token');
+    const userRole = localStorage.getItem('user_role');
+    setAuth({ token, userRole });
+  }, []);
+
   const login = (token, role) => {
     localStorage.setItem('jwt_token', token);
     localStorage.setItem('user_role', role);
