@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import authService from "../../services/authService";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Dashboard from "../../pages/Dashboard";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -16,13 +19,32 @@ const Login = () => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
+  //   const handleSubmit = async (e) => {
+  //     e.preventDefault();
+  //     try {
+  //       const { role, ...rest } = credentials;
+  //       const data = await authService.login(role, rest);
+  //       if (data.token) {
+  //         navigate("/dashboard");
+  //       }
+  //     } catch (err) {
+  //       setError("Invalid username or password");
+  //     }
+  //   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const { role, ...rest } = credentials;
       const data = await authService.login(role, rest);
       if (data.token) {
-        navigate("/Dashboard.jsx");
+        localStorage.setItem("jwt_token", data.token);
+        localStorage.setItem("user_role", role);
+        navigate("/CategoryPage");
+        toast.success("User logged in successfully!", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 5000,
+        });
       }
     } catch (err) {
       setError("Invalid username or password");

@@ -1,10 +1,13 @@
 import React from 'react';
 import Login from '../components/authentication/Login';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoginPage = () => {
   return (
     <div className="login-page">
       <Login />
+      <ToastContainer />
     </div>
   );
 };
