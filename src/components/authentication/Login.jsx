@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import authService from "../../services/authService";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Dashboard from "../../pages/Dashboard";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -22,7 +23,7 @@ const Login = () => {
       const { role, ...rest } = credentials;
       const data = await authService.login(role, rest);
       if (data.token) {
-        navigate("/Dashboard.jsx");
+        navigate("/dashboard");
       }
     } catch (err) {
       setError("Invalid username or password");
