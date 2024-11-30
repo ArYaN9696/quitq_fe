@@ -31,19 +31,18 @@ const EditProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    // Map frontend fields to backend DTO fields
+
     const productData = {
-      ProductName: product.name,             // Map 'name' to 'ProductName'
+      ProductName: product.name,
       Description: product.description,
-      Price: parseFloat(product.price),      // Ensure Price is a decimal
-      Stock: parseInt(product.stock, 10),    // Ensure Stock is an integer
-      ImageUrl: product.imageUrl || '',      // Optional field
-      SubcategoryId: parseInt(product.subcategoryId, 10) // Ensure SubcategoryId is an integer
+      Price: parseFloat(product.price),
+      Stock: parseInt(product.stock, 10),
+      ImageUrl: product.imageUrl || '',
+      SubcategoryId: parseInt(product.subcategoryId, 10),
     };
-  
+
     try {
-      console.log('Submitting updated product:', productData); // Debugging
+      console.log('Submitting updated product:', productData);
       const response = await updateProduct(productId, productData);
       alert('Product updated successfully!');
     } catch (error) {
@@ -51,62 +50,97 @@ const EditProduct = () => {
       alert(error.message || 'Failed to update product. Please try again.');
     }
   };
-  
 
-  if (loading) return <div>Loading...</div>; // Display loading indicator
-  if (error) return <div>{error}</div>; // Display error message
+  if (loading) return <div className="text-center mt-4">Loading...</div>;
+  if (error) return <div className="alert alert-danger mt-4">{error}</div>;
 
   return (
-    <form onSubmit={handleSubmit} className="product-form">
-      <h2>Edit Product</h2>
-      <input
-        type="text"
-        name="name"
-        placeholder="Name"
-        value={product?.name || ''} // Safely access product.name
-        onChange={handleChange}
-        required
-      />
-      <textarea
-        name="description"
-        placeholder="Description"
-        value={product?.description || ''} // Safely access product.description
-        onChange={handleChange}
-        required
-      />
-      <input
-        type="number"
-        name="price"
-        placeholder="Price"
-        value={product?.price || 0} // Safely access product.price
-        onChange={handleChange}
-        required
-      />
-      <input
-        type="number"
-        name="stock"
-        placeholder="Stock"
-        value={product?.stock || 0} // Safely access product.stock
-        onChange={handleChange}
-        required
-      />
-      <input
-        type="number"
-        name="subcategoryId"
-        placeholder="Subcategory ID"
-        value={product?.subcategoryId || ''} // Safely access product.subcategoryId
-        onChange={handleChange}
-        required
-      />
-      <input
-        type="text"
-        name="imageUrl"
-        placeholder="Image URL"
-        value={product?.imageUrl || ''} // Safely access product.imageUrl
-        onChange={handleChange}
-      />
-      <button type="submit">Update Product</button>
-    </form>
+    <div className="container mt-5">
+      <div className="card p-4">
+        <h2 className="text-center mb-4">Edit Product</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label htmlFor="name" className="form-label">Product Name</label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              className="form-control"
+              placeholder="Name"
+              value={product?.name || ''}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="description" className="form-label">Description</label>
+            <textarea
+              name="description"
+              id="description"
+              className="form-control"
+              placeholder="Description"
+              value={product?.description || ''}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="price" className="form-label">Price</label>
+            <input
+              type="number"
+              name="price"
+              id="price"
+              className="form-control"
+              placeholder="Price"
+              value={product?.price || 0}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="stock" className="form-label">Stock</label>
+            <input
+              type="number"
+              name="stock"
+              id="stock"
+              className="form-control"
+              placeholder="Stock"
+              value={product?.stock || 0}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="subcategoryId" className="form-label">Subcategory ID</label>
+            <input
+              type="number"
+              name="subcategoryId"
+              id="subcategoryId"
+              className="form-control"
+              placeholder="Subcategory ID"
+              value={product?.subcategoryId || ''}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="imageUrl" className="form-label">Image URL</label>
+            <input
+              type="text"
+              name="imageUrl"
+              id="imageUrl"
+              className="form-control"
+              placeholder="Image URL"
+              value={product?.imageUrl || ''}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="text-center">
+            <button type="submit" className="btn btn-primary">Update Product</button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
 
