@@ -1,9 +1,13 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUserOrders } from "../../store/orderSlice";
-import { selectOrders, selectOrderStatus, selectOrderError } from "../../store/Selectors/orderSelectors";
-import Spinner from "../components/Spinner";
-import ErrorMessage from "../components/ErrorMessage";
+import {
+  selectOrders,
+  selectOrderStatus,
+  selectOrderError,
+} from "../../store/Selectors/orderSelectors";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const OrderHistory = () => {
   const dispatch = useDispatch();
@@ -15,26 +19,29 @@ const OrderHistory = () => {
     dispatch(fetchUserOrders());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (status === "failed") {
+      toast.error(error || "Failed to load orders.");
+    }
+  }, [status, error]);
+
   if (status === "loading") {
     return (
       <div className="container mt-5 text-center">
-        <Spinner />
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
       </div>
     );
   }
 
-  if (status === "failed") {
-    return (
-      <div className="container mt-5">
-        <ErrorMessage message={error || "Failed to load orders."} />
-      </div>
-    );
-  }
+  // Ensure orders is an array and check if it's empty
+  const isOrdersEmpty = !Array.isArray(orders) || orders.length === 0;
 
   return (
     <div className="container mt-5">
       <h2 className="mb-4 text-center">Order History</h2>
-      {orders.length === 0 ? (
+      {isOrdersEmpty ? (
         <p className="text-center">No orders found.</p>
       ) : (
         <div className="table-responsive">

@@ -6,8 +6,12 @@ import { useNavigate } from "react-router-dom";
 const Checkout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const cart = useSelector((state) => state.cart);
-  const user = useSelector((state) => state.auth.user);
+
+  // Get cart state, providing a fallback empty object if it's undefined
+  const cart = useSelector((state) => state.cart || { items: [], total: 0 });
+
+  // Get user state, providing fallback empty object if undefined
+  const user = useSelector((state) => state.auth?.user);
 
   const [shippingAddress, setShippingAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("Credit Card");
@@ -18,10 +22,17 @@ const Checkout = () => {
       return;
     }
 
+    // Ensure the user is logged in before allowing order creation
+    if (!user) {
+      alert("Please log in to place an order.");
+      return;
+    }
+
     const orderDetails = {
       shippingAddress,
       paymentMethod,
       items: cart.items,
+      userId: user.id, // Assuming user has an `id` field
     };
 
     try {
@@ -63,18 +74,24 @@ const Checkout = () => {
       <div className="card mb-4">
         <div className="card-body">
           <h2 className="h5 mb-3">Order Summary</h2>
-          <ul className="list-group mb-3">
-            {cart.items.map((item) => (
-              <li key={item.id} className="list-group-item d-flex justify-content-between align-items-center">
-                <div>
-                  <strong>{item.name}</strong> - {item.quantity} x ${item.price}
-                </div>
-                <span className="badge bg-secondary">${(item.quantity * item.price).toFixed(2)}</span>
-              </li>
-            ))}
-          </ul>
+          {/* Check if cart.items is an array and has elements */}
+          {cart.items && cart.items.length > 0 ? (
+            <ul className="list-group mb-3">
+              {cart.items.map((item) => (
+                <li key={item.id} className="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>{item.name}</strong> - {item.quantity} x ₹{item.price}
+                  </div>
+                  <span className="badge bg-secondary">₹{(item.quantity * item.price).toFixed(2)}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No items in the cart</p>
+          )}
+          {/* Display total price in INR */}
           <p className="h5 text-end mb-0">
-            <strong>Total:</strong> ${cart.total.toFixed(2)}
+            <strong>Total:</strong> ₹{cart.total.toLocaleString()}
           </p>
         </div>
       </div>
