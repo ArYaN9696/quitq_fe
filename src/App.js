@@ -14,6 +14,7 @@ import CategoryPage from "./pages/CategoryPage";
 import OrderDetails from "./components/order/OrderDetails.jsx";
 import OrderHistory from "./components/order/OrderHistory";
 import Checkout from "./components/order/Checkout";
+import Report from "./components/report/Report";
 import Navbar from "./components/navigation/Navbar";
 import Sidebar from "./components/navigation/Sidebar";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -98,6 +99,14 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={["customer"]}>
                     <Checkout />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/report"
+                element={
+                  <ProtectedRoute allowedRoles={["admin", "seller"]}>
+                    <Report />
                   </ProtectedRoute>
                 }
               />

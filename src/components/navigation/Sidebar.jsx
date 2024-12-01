@@ -56,6 +56,14 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                   Checkout
                 </Link>
               </li>
+              {/* Add Report link here */}
+              {(auth.role === "admin" || auth.role === "seller") && (
+                <li className="nav-item">
+                  <Link className="nav-link text-white" to="/report">
+                    Reports
+                  </Link>
+                </li>
+              )}
             </>
           ) : (
             <>
