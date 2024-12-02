@@ -3,19 +3,25 @@ import { getCartItems, addToCart, updateCartItem, removeFromCart, clearCart } fr
 import useAuth from '../../hooks/useAuth';
 
 const Cart = () => {
-  const { auth } = useAuth();  
+  const { auth } = useAuth();
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [productId, setProductId] = useState('');
-  const [quantity, setQuantity] = useState(1); 
+  const [quantity, setQuantity] = useState(1);
   const [productName, setProductName] = useState('');
 
   useEffect(() => {
     const fetchCartItems = async () => {
+      if (!auth.token) {
+        setError('Please login to view cart.');
+        return;
+      }
       try {
         setLoading(true);
-        const response = await getCartItems();  
+        const response = await getCartItems({
+          headers: { Authorization: `Bearer ${auth.token}` }
+        });
         setCartItems(response || []);
       } catch (error) {
         console.error('Error fetching cart items:', error);
@@ -35,25 +41,20 @@ const Cart = () => {
         ProductId: parseInt(productId, 10),
         Quantity: parseInt(quantity, 10),
       };
-      console.log('Submitting cart item:', cartItem);
-      const response = await addToCart(cartItem);
+      const response = await addToCart(cartItem, auth.token);
       alert(response.message);
     } catch (error) {
       console.error('Error adding product to cart:', error);
       alert('Failed to add product to cart.');
     }
   };
-  
-  
 
   const handleUpdateQuantity = async (productId, newQuantity) => {
     try {
-      const response = await updateCartItem({ ProductId: productId, Quantity: newQuantity });
+      const response = await updateCartItem({ ProductId: productId, Quantity: newQuantity }, auth.token); 
       alert(response.message);
-      setCartItems((prevItems) =>
-        prevItems.map((item) =>
-          item.productId === productId ? { ...item, quantity: newQuantity } : item
-        )
+      setCartItems(prevItems =>
+        prevItems.map(item => (item.productId === productId ? { ...item, quantity: newQuantity } : item))
       );
     } catch (error) {
       console.error('Error updating cart item:', error);
@@ -62,9 +63,9 @@ const Cart = () => {
 
   const handleRemoveItem = async (productId) => {
     try {
-      const response = await removeFromCart(productId);
+      const response = await removeFromCart(productId, auth.token); 
       alert(response.message);
-      setCartItems((prevItems) => prevItems.filter((item) => item.productId !== productId));
+      setCartItems(prevItems => prevItems.filter(item => item.productId !== productId));
     } catch (error) {
       console.error('Error removing cart item:', error);
     }
@@ -72,7 +73,7 @@ const Cart = () => {
 
   const handleClearCart = async () => {
     try {
-      const response = await clearCart();
+      const response = await clearCart(auth.token); 
       alert(response.message);
       setCartItems([]);
     } catch (error) {
@@ -86,55 +87,48 @@ const Cart = () => {
   return (
     <div className="container mt-5">
       <h2>Your Cart</h2>
-      
-      {/* Add to Cart Form */}
       <form onSubmit={handleAddToCart} className="mt-4">
-  <div className="row">
-    {/* Product Name */}
-    <div className="col-md-4">
-      <input
-        type="text"
-        className="form-control"
-        placeholder="Product Name"
-        value={productName}
-        onChange={(e) => setProductName(e.target.value)}
-        required
-      />
-    </div>
-    {/* Product ID */}
-    <div className="col-md-4">
-      <input
-        type="number"
-        className="form-control"
-        placeholder="Product ID"
-        value={productId}
-        onChange={(e) => setProductId(e.target.value)}
-        required
-      />
-    </div>
-    {/* Quantity */}
-    <div className="col-md-4">
-      <input
-        type="number"
-        className="form-control"
-        placeholder="Quantity"
-        value={quantity}
-        onChange={(e) => setQuantity(e.target.value)}
-        required
-      />
-    </div>
-  </div>
-  <div className="row mt-3">
-    <div className="col-md-12">
-      <button type="submit" className="btn btn-primary w-100">
-        Add to Cart
-      </button>
-    </div>
-  </div>
-</form>
+        <div className="row">
+          <div className="col-md-4">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Product Name"
+              value={productName}
+              onChange={(e) => setProductName(e.target.value)}
+              required
+            />
+          </div>
+          <div className="col-md-4">
+            <input
+              type="number"
+              className="form-control"
+              placeholder="Product ID"
+              value={productId}
+              onChange={(e) => setProductId(e.target.value)}
+              required
+            />
+          </div>
+          <div className="col-md-4">
+            <input
+              type="number"
+              className="form-control"
+              placeholder="Quantity"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
+              required
+            />
+          </div>
+        </div>
+        <div className="row mt-3">
+          <div className="col-md-12">
+            <button type="submit" className="btn btn-primary w-100">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      </form>
 
-
-      {/* Cart Items Table */}
       {cartItems.length === 0 ? (
         <div className="alert alert-info mt-3">Your cart is empty.</div>
       ) : (
@@ -171,8 +165,6 @@ const Cart = () => {
           </table>
         </div>
       )}
-      
-      
       {cartItems.length > 0 && (
         <button className="btn btn-warning mt-3" onClick={handleClearCart}>
           Clear Cart

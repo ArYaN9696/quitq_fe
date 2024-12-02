@@ -19,18 +19,7 @@ const Login = () => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
-  //   const handleSubmit = async (e) => {
-  //     e.preventDefault();
-  //     try {
-  //       const { role, ...rest } = credentials;
-  //       const data = await authService.login(role, rest);
-  //       if (data.token) {
-  //         navigate("/dashboard");
-  //       }
-  //     } catch (err) {
-  //       setError("Invalid username or password");
-  //     }
-  //   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,10 +29,10 @@ const Login = () => {
       if (data.token) {
         localStorage.setItem("jwt_token", data.token);
         localStorage.setItem("user_role", role);
-        navigate("/CategoryPage");
+        navigate("/products");
         toast.success("User logged in successfully!", {
           position: toast.POSITION.TOP_RIGHT,
-          autoClose: 5000,
+          autoClose: 3000,
         });
       }
     } catch (err) {
