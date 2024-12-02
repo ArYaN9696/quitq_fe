@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { createOrder } from "../../store/orderSlice";
 import { useNavigate } from "react-router-dom";
@@ -7,14 +7,17 @@ const Checkout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Get cart state, providing a fallback empty object if it's undefined
   const cart = useSelector((state) => state.cart || { items: [], total: 0 });
 
-  // Get user state, providing fallback empty object if undefined
   const user = useSelector((state) => state.auth?.user);
 
   const [shippingAddress, setShippingAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("Credit Card");
+
+  useEffect(() => {
+    console.log("Cart Data: ", cart);
+    console.log("User Data: ", user);
+  }, [cart, user]);
 
   const handleOrderCreation = async () => {
     if (!shippingAddress) {
@@ -22,7 +25,6 @@ const Checkout = () => {
       return;
     }
 
-    // Ensure the user is logged in before allowing order creation
     if (!user) {
       alert("Please log in to place an order.");
       return;
@@ -32,7 +34,7 @@ const Checkout = () => {
       shippingAddress,
       paymentMethod,
       items: cart.items,
-      userId: user.id, // Assuming user has an `id` field
+      userId: user.id, 
     };
 
     try {

@@ -1,15 +1,43 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const { auth } = useAuth();
+  const sidebarRef = useRef(null);
+  const buttonRef = useRef(null);
+  const isButtonClicked = useRef(false);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        sidebarRef.current &&
+        buttonRef.current &&
+        !sidebarRef.current.contains(event.target) &&
+        !buttonRef.current.contains(event.target)
+      ) {
+        if (!isButtonClicked.current) {
+          toggleSidebar(false);
+        }
+      }
+      isButtonClicked.current = false;
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [toggleSidebar]);
+
+  const handleButtonClick = () => {
+    isButtonClicked.current = true;
+    toggleSidebar(!isOpen);
+  };
 
   return (
     <div
-      className={`sidebar bg-dark text-white ${
-        isOpen ? "d-block" : "d-none d-md-block"
-      }`}
+      ref={sidebarRef}
+      className={`sidebar bg-dark text-white ${isOpen ? "d-block" : "d-none d-md-block"}`}
       style={{
         position: "absolute",
         top: "56px",
@@ -71,6 +99,13 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                   Checkout
                 </Link>
               </li>
+              {(auth.userRole === "admin" || auth.userRole === "seller") && (
+                <li className="nav-item">
+                  <Link className="nav-link text-white" to="/report">
+                    Reports
+                  </Link>
+                </li>
+              )}
             </>
           ) : (
             <>

@@ -14,6 +14,7 @@ import CategoryPage from "./pages/CategoryPage";
 import OrderDetails from "./components/order/OrderDetails.jsx";
 import OrderHistory from "./components/order/OrderHistory";
 import Checkout from "./components/order/Checkout";
+import Report from "./components/report/Report";
 import Navbar from "./components/navigation/Navbar";
 import Sidebar from "./components/navigation/Sidebar";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -112,6 +113,14 @@ function App() {
                 <ValidatePayment /></ProtectedRoute>} />
               <Route path="/payments-by-order" element={<ProtectedRoute allowedRoles={['seller', 'admin']}>
                  <PaymentsByOrder /></ProtectedRoute>} />
+              <Route
+                path="/report"
+                element={
+                  <ProtectedRoute allowedRoles={["admin", "seller"]}>
+                    <Report />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="/category-page" element={<CategoryPage />} />
               <Route path="/dashboard" element={<Dashboard />} />
             </Routes>
