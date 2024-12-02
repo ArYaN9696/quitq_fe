@@ -3,21 +3,22 @@ import { useSelector, useDispatch } from "react-redux";
 import { createOrder } from "../../store/orderSlice";
 import { useNavigate } from "react-router-dom";
 import { clearCartThunk } from "../../store/cartSlice";
+import useAuth from "../../hooks/useAuth";
 
 const Checkout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const { auth } = useAuth();
   const cart = useSelector((state) => state.cart || { cartItems: [], total: 0 });
-  const user = useSelector((state) => state.auth?.user);
 
   const [shippingAddress, setShippingAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("Credit Card");
 
   useEffect(() => {
     console.log("Cart Data: ", cart);
-    console.log("User Data: ", user);
-  }, [cart, user]);
+    console.log("Auth Data: ", auth);
+  }, [cart, auth]);
 
   const handleOrderCreation = async () => {
     if (!shippingAddress) {
@@ -25,7 +26,7 @@ const Checkout = () => {
       return;
     }
 
-    if (!user) {
+    if (!auth || !auth.token) {
       alert("Please log in to place an order.");
       return;
     }
@@ -34,18 +35,15 @@ const Checkout = () => {
       shippingAddress,
       paymentMethod,
       items: cart.cartItems,
-      userId: user.id,
+      userRole: auth.userRole,
     };
 
     try {
-      // Dispatch create order action
       await dispatch(createOrder(orderDetails)).unwrap();
       alert("Order placed successfully!");
 
-      // Clear the cart after placing the order
       await dispatch(clearCartThunk()).unwrap();
 
-      // Redirect to order success page
       navigate("/order-success");
     } catch (error) {
       console.error("Order creation failed:", error);
@@ -102,7 +100,7 @@ const Checkout = () => {
                 >
                   <div>
                     <strong>{item.productName}</strong> - {item.quantity} x ₹
-                    {item.price}
+                    {item.price.toFixed(2)}
                   </div>
                   <span className="badge bg-secondary">
                     ₹{(item.quantity * item.price).toFixed(2)}
