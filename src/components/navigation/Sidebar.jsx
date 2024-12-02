@@ -52,11 +52,11 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     >
       <div className="p-3">
         <ul className="nav flex-column">
-          <li className="nav-item">
+          {/* <li className="nav-item">
             <Link className="nav-link text-white" to="/dashboard">
               Dashboard
             </Link>
-          </li>
+          </li> */}
           {auth.token ? (
             <>
               <li className="nav-item">
