@@ -1,82 +1,83 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  addToCart,
-  updateItemQuantity,
-  removeFromCart,
-  clearCart,
-  setCartItems,
-} from "../../store/cartSlice";
-import { getCartItems } from "../../services/cartService";
-import useAuth from "../../hooks/useAuth";
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCartItems, addToCartThunk, updateCartItemThunk, removeFromCartThunk, clearCartThunk } from '../../store/cartSlice';
+import useAuth from '../../hooks/useAuth';
 
 const Cart = () => {
-  const dispatch = useDispatch();
   const { auth } = useAuth();
-  const cartItems = useSelector((state) => state.cart.items);
-  const total = useSelector((state) => state.cart.total);
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart.cartItems || []);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [productId, setProductId] = useState("");
+  const [productId, setProductId] = useState('');
   const [quantity, setQuantity] = useState(1);
-  const [productName, setProductName] = useState("");
+  const [productName, setProductName] = useState('');
 
   useEffect(() => {
     const fetchCartItems = async () => {
-      if (!auth.token) {
-        setError("Please login to view cart.");
-        return;
-      }
       try {
         setLoading(true);
-        const response = await getCartItems({
-          headers: { Authorization: `Bearer ${auth.token}` },
-        });
-        dispatch(setCartItems(response || []));
+        await dispatch(getCartItems());
       } catch (error) {
-        console.error("Error fetching cart items:", error);
-        setError("Failed to fetch cart items.");
+        console.error('Error fetching cart items:', error);
+        setError('Failed to fetch cart items.');
       } finally {
         setLoading(false);
       }
     };
-    fetchCartItems();
+    if (auth.token) fetchCartItems();
   }, [auth.token, dispatch]);
 
   const handleAddToCart = async (e) => {
     e.preventDefault();
-    const cartItem = {
-      product: {
-        name: productName,
-        id: parseInt(productId, 10),
-        price: 100,
-      },
-      quantity: parseInt(quantity, 10),
-    };
-
-    dispatch(addToCart(cartItem));
-    alert("Product added to cart");
+    try {
+      const cartItem = {
+        ProductName: productName,
+        ProductId: parseInt(productId, 10),
+        Quantity: parseInt(quantity, 10),
+      };
+      const response = await dispatch(addToCartThunk(cartItem));
+      alert(response.payload.message); // Assuming the response has a message property
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
+      alert('Failed to add product to cart.');
+    }
   };
 
-  const handleUpdateQuantity = (productId, newQuantity) => {
-    dispatch(updateItemQuantity({ id: productId, quantity: newQuantity }));
+  const handleUpdateQuantity = async (productId, newQuantity) => {
+    try {
+      const response = await dispatch(updateCartItemThunk({ ProductId: productId, Quantity: newQuantity }));
+      alert(response.payload.message); // Assuming the response has a message property
+    } catch (error) {
+      console.error('Error updating cart item:', error);
+    }
   };
 
-  const handleRemoveItem = (productId) => {
-    dispatch(removeFromCart(productId));
+  const handleRemoveItem = async (productId) => {
+    try {
+      const response = await dispatch(removeFromCartThunk(productId));
+      alert(response.payload.message); // Assuming the response has a message property
+    } catch (error) {
+      console.error('Error removing cart item:', error);
+    }
   };
 
-  const handleClearCart = () => {
-    dispatch(clearCart());
+  const handleClearCart = async () => {
+    try {
+      const response = await dispatch(clearCartThunk());
+      alert(response.payload.message); // Assuming the response has a message property
+    } catch (error) {
+      console.error('Error clearing cart:', error);
+    }
   };
 
-  if (loading)
-    return <div className="text-center mt-4">Loading cart items...</div>;
+  if (loading) return <div className="text-center mt-4">Loading cart items...</div>;
   if (error) return <div className="alert alert-danger mt-4">{error}</div>;
 
   return (
     <div className="container mt-5">
       <h2>Your Cart</h2>
+      {/* Add to Cart Form */}
       <form onSubmit={handleAddToCart} className="mt-4">
         <div className="row">
           <div className="col-md-4">
@@ -119,6 +120,7 @@ const Cart = () => {
         </div>
       </form>
 
+      {/* Cart Items Table */}
       {cartItems.length === 0 ? (
         <div className="alert alert-info mt-3">Your cart is empty.</div>
       ) : (
@@ -133,24 +135,19 @@ const Cart = () => {
             </thead>
             <tbody>
               {cartItems.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.name || "Unknown Product"}</td>
+                <tr key={item.productId}>
+                  <td>{item.productName || 'Unknown Product'}</td>
                   <td>
                     <input
                       type="number"
                       value={item.quantity}
-                      onChange={(e) =>
-                        handleUpdateQuantity(item.id, parseInt(e.target.value))
-                      }
+                      onChange={(e) => handleUpdateQuantity(item.productId, parseInt(e.target.value))}
                       className="form-control"
                       min="1"
                     />
                   </td>
                   <td>
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={() => handleRemoveItem(item.id)}
-                    >
+                    <button className="btn btn-danger btn-sm" onClick={() => handleRemoveItem(item.productId)}>
                       Remove
                     </button>
                   </td>
@@ -160,10 +157,6 @@ const Cart = () => {
           </table>
         </div>
       )}
-
-      <div className="mt-3">
-        <h4>Total: ₹{total}</h4>
-      </div>
 
       {cartItems.length > 0 && (
         <button className="btn btn-warning mt-3" onClick={handleClearCart}>

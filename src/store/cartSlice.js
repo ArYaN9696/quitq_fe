@@ -1,50 +1,74 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { getCartItems as fetchCartItems, addToCart, updateCartItem, removeFromCart, clearCart } from '../services/cartService';
 
-const initialState = {
-  items: [], 
-  total: 0,
-}
+export const getCartItems = createAsyncThunk('cart/getCartItems', async () => {
+  const response = await fetchCartItems(); // Use the renamed version of getCartItems
+  return response; // Return the cart items to be stored in Redux
+});
+
+export const addToCartThunk = createAsyncThunk('cart/addToCart', async (item) => {
+  const response = await addToCart(item);
+  return response; // Return the added item
+});
+
+export const updateCartItemThunk = createAsyncThunk('cart/updateCartItem', async (item) => {
+  const response = await updateCartItem(item);
+  return response; // Return the updated item
+});
+
+export const removeFromCartThunk = createAsyncThunk('cart/removeFromCart', async (productId) => {
+  const response = await removeFromCart(productId);
+  return response; // Return the updated cart after removal
+});
+
+export const clearCartThunk = createAsyncThunk('cart/clearCart', async () => {
+  const response = await clearCart();
+  return response; // Return the confirmation or the cleared state
+});
+
 const cartSlice = createSlice({
   name: 'cart',
-  initialState,
+  initialState: {
+    cartItems: [],
+    status: 'idle',
+    error: null,
+  },
   reducers: {
-    addToCart: (state, action) => {
-      const { product, quantity } = action.payload;
-      const existingItem = state.items.find(item => item.id === product.id);
-
-      if (existingItem) {
-        existingItem.quantity += quantity;
-      } else {
-        state.items.push({ ...product, quantity });
-      }
-
-      state.total = state.items.reduce((total, item) => total + item.price * item.quantity, 0);
+    resetError: (state) => {
+      state.error = null;
     },
-    removeFromCart: (state, action) => {
-      const id = action.payload;
-      state.items = state.items.filter(item => item.id !== id);
-      
-      state.total = state.items.reduce((total, item) => total + item.price * item.quantity, 0);
-    },
-    updateItemQuantity: (state, action) => {
-      const { id, quantity } = action.payload;
-      const item = state.items.find(item => item.id === id);
-      if (item) {
-        item.quantity = quantity;
-      }
-      state.total = state.items.reduce((total, item) => total + item.price * item.quantity, 0);
-    },
-    clearCart: (state) => {
-      state.items = [];
-      state.total = 0;
-    },
-    setCartItems: (state, action) => {
-      state.items = action.payload;
-      state.total = state.items.reduce((total, item) => total + item.price * item.quantity, 0);
-    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getCartItems.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getCartItems.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.cartItems = action.payload;
+      })
+      .addCase(getCartItems.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+      .addCase(addToCartThunk.fulfilled, (state, action) => {
+        state.cartItems.push(action.payload); // Add the new item to the cart
+      })
+      .addCase(updateCartItemThunk.fulfilled, (state, action) => {
+        const updatedItem = action.payload;
+        const index = state.cartItems.findIndex(item => item.productId === updatedItem.productId);
+        if (index !== -1) {
+          state.cartItems[index] = updatedItem; // Update the existing item in the cart
+        }
+      })
+      .addCase(removeFromCartThunk.fulfilled, (state, action) => {
+        state.cartItems = state.cartItems.filter(item => item.productId !== action.payload.productId);
+      })
+      .addCase(clearCartThunk.fulfilled, (state) => {
+        state.cartItems = []; // Clear all items
+      });
   },
 });
 
-export const { addToCart, removeFromCart, updateItemQuantity, clearCart, setCartItems } = cartSlice.actions;
-
+export const { resetError } = cartSlice.actions;
 export default cartSlice.reducer;
