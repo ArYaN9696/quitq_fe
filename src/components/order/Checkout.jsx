@@ -100,10 +100,13 @@ const Checkout = () => {
                 >
                   <div>
                     <strong>{item.productName}</strong> - {item.quantity} x ₹
-                    {item.price.toFixed(2)}
+                    {item.price ? item.price.toFixed(2) : "0.00"}
                   </div>
                   <span className="badge bg-secondary">
-                    ₹{(item.quantity * item.price).toFixed(2)}
+                    ₹
+                    {item.price && item.quantity
+                      ? (item.quantity * item.price).toFixed(2)
+                      : "0.00"}
                   </span>
                 </li>
               ))}
