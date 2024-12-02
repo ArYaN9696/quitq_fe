@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import authService from '../../services/authService'; 
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import '../cust_CSS/login.css';
 const Register = () => {
   const [formData, setFormData] = useState({
     userName: '',
@@ -69,7 +69,7 @@ const Register = () => {
             <button className="btn btn-outline-primary m-2" onClick={() => handleRoleSelect('admin')}>Admin</button>
           </div>
         )}
-
+        
         {/* Registration Form */}
         {role && (
           <form onSubmit={handleSubmit}>
