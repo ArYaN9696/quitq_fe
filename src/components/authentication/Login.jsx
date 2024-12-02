@@ -46,6 +46,7 @@ const Login = () => {
         className="card p-4 shadow-lg"
         style={{ maxWidth: "400px", width: "100%" }}
       >
+        
         <h3 className="text-center mb-4">Login</h3>
         {error && <div className="alert alert-danger">{error}</div>}
         <form onSubmit={handleSubmit}>
@@ -102,6 +103,7 @@ const Login = () => {
         </form>
       </div>
     </div>
+    
   );
 };
 
