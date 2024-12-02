@@ -53,6 +53,10 @@ const Checkout = () => {
     }
   };
 
+  const totalFormatted = cart.total
+    ? cart.total.toLocaleString("en-IN", { style: "currency", currency: "INR" })
+    : "₹0.00";
+
   return (
     <div className="container mt-5">
       <h1 className="mb-4 text-center">Checkout</h1>
@@ -112,7 +116,7 @@ const Checkout = () => {
 
           {/* Display total price in INR */}
           <p className="h5 text-end mb-0">
-            <strong>Total:</strong> ₹{cart.total.toLocaleString()}
+            <strong>Total:</strong> {totalFormatted}
           </p>
         </div>
       </div>
