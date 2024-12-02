@@ -47,6 +47,21 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                 </Link>
               </li>
               <li className="nav-item">
+                <Link className="nav-link text-white" to="/process-payment">
+                  Payment
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link text-white" to="/validate-payment">
+                  Validate Payment
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link text-white" to="/payments-by-order">
+                  Payments By Order Id
+                </Link>
+              </li>
+              <li className="nav-item">
                 <Link className="nav-link text-white" to="/order-history">
                   Order History
                 </Link>

@@ -19,7 +19,11 @@ import Sidebar from "./components/navigation/Sidebar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import useAuth from "./hooks/useAuth";
-
+import ProcessPayment from "./components/payment/ProcessPayment.jsx";
+import ValidatePayment from "./components/payment/ValidatePayment.jsx";
+import PaymentsByOrder from "./components/payment/PaymentsByOrder.jsx";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { auth } = useAuth();
@@ -28,6 +32,7 @@ function App() {
   };
 
   return (
+    <>
     <Router>
       <div className="d-flex" style={{ position: "relative", height: "100vh" }}>
         {/* Sidebar */}
@@ -101,6 +106,12 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route path="/process-payment" element={<ProtectedRoute allowedRoles={['customer']}>
+                <ProcessPayment /></ProtectedRoute>} />
+              <Route path="/validate-payment" element={<ProtectedRoute allowedRoles={['seller', 'admin']}>
+                <ValidatePayment /></ProtectedRoute>} />
+              <Route path="/payments-by-order" element={<ProtectedRoute allowedRoles={['seller', 'admin']}>
+                 <PaymentsByOrder /></ProtectedRoute>} />
               <Route path="/category-page" element={<CategoryPage />} />
               <Route path="/dashboard" element={<Dashboard />} />
             </Routes>
@@ -108,6 +119,9 @@ function App() {
         </div>
       </div>
     </Router>
+    <ToastContainer autoClose={3000} />
+    </>
+    
   );
 }
 

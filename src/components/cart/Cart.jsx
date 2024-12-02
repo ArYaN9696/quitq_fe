@@ -9,6 +9,7 @@ const Cart = () => {
   const [error, setError] = useState(null);
   const [productId, setProductId] = useState('');
   const [quantity, setQuantity] = useState(1); 
+  const [productName, setProductName] = useState('');
 
   useEffect(() => {
     const fetchCartItems = async () => {
@@ -29,14 +30,21 @@ const Cart = () => {
   const handleAddToCart = async (e) => {
     e.preventDefault();
     try {
-      const response = await addToCart({ ProductId: productId, Quantity: quantity });
+      const cartItem = { 
+        ProductName: productName,
+        ProductId: parseInt(productId, 10),
+        Quantity: parseInt(quantity, 10),
+      };
+      console.log('Submitting cart item:', cartItem);
+      const response = await addToCart(cartItem);
       alert(response.message);
-      setCartItems((prevItems) => [...prevItems, response.data]);
     } catch (error) {
-      console.error('Error adding to cart:', error);
-      alert(error.message || 'Failed to add product to cart.');
+      console.error('Error adding product to cart:', error);
+      alert('Failed to add product to cart.');
     }
   };
+  
+  
 
   const handleUpdateQuantity = async (productId, newQuantity) => {
     try {
@@ -81,32 +89,50 @@ const Cart = () => {
       
       {/* Add to Cart Form */}
       <form onSubmit={handleAddToCart} className="mt-4">
-        <div className="row">
-          <div className="col-md-4">
-            <input
-              type="number"
-              className="form-control"
-              placeholder="Product ID"
-              value={productId}
-              onChange={(e) => setProductId(e.target.value)}
-              required
-            />
-          </div>
-          <div className="col-md-4">
-            <input
-              type="number"
-              className="form-control"
-              placeholder="Quantity"
-              value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
-              required
-            />
-          </div>
-          <div className="col-md-4">
-            <button type="submit" className="btn btn-primary w-100">Add to Cart</button>
-          </div>
-        </div>
-      </form>
+  <div className="row">
+    {/* Product Name */}
+    <div className="col-md-4">
+      <input
+        type="text"
+        className="form-control"
+        placeholder="Product Name"
+        value={productName}
+        onChange={(e) => setProductName(e.target.value)}
+        required
+      />
+    </div>
+    {/* Product ID */}
+    <div className="col-md-4">
+      <input
+        type="number"
+        className="form-control"
+        placeholder="Product ID"
+        value={productId}
+        onChange={(e) => setProductId(e.target.value)}
+        required
+      />
+    </div>
+    {/* Quantity */}
+    <div className="col-md-4">
+      <input
+        type="number"
+        className="form-control"
+        placeholder="Quantity"
+        value={quantity}
+        onChange={(e) => setQuantity(e.target.value)}
+        required
+      />
+    </div>
+  </div>
+  <div className="row mt-3">
+    <div className="col-md-12">
+      <button type="submit" className="btn btn-primary w-100">
+        Add to Cart
+      </button>
+    </div>
+  </div>
+</form>
+
 
       {/* Cart Items Table */}
       {cartItems.length === 0 ? (
