@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 
@@ -34,10 +34,114 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     toggleSidebar(!isOpen);
   };
 
+  const renderLinks = () => {
+    if (!auth.token) {
+      // user not logged in
+      return (
+        <>
+          <li className="nav-item">
+            <Link className="nav-link text-white" to="/login">
+              Login
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link text-white" to="/register">
+              Register
+            </Link>
+          </li>
+        </>
+      );
+    }
+
+    // user logGed In
+    const links = [];
+    if (["admin", "seller", "customer"].includes(auth.userRole)) {
+      links.push(
+        <li className="nav-item" key="categories">
+          <Link className="nav-link text-white" to="/category-page">
+            Categories
+          </Link>
+        </li>
+      );
+    }
+    if (["seller", "admin"].includes(auth.userRole)) {
+      links.push(
+        <li className="nav-item" key="products">
+          <Link className="nav-link text-white" to="/products">
+            Products
+          </Link>
+        </li>
+      );
+    }
+    if (auth.userRole === "customer") {
+      links.push(
+        <li className="nav-item" key="cart">
+          <Link className="nav-link text-white" to="/cart">
+            Cart
+          </Link>
+        </li>
+      );
+    //   links.push(
+    //     <li className="nav-item" key="checkout">
+    //       <Link className="nav-link text-white" to="/checkout">
+    //         Checkout
+    //       </Link>
+    //     </li>
+    //   );
+    // }
+    // if (auth.userRole === "customer") {
+    //   links.push(
+    //     <li className="nav-item" key="process-payment">
+    //       <Link className="nav-link text-white" to="/process-payment">
+    //         Payment
+    //       </Link>
+    //     </li>
+    //   );
+    }
+    if (["seller", "admin"].includes(auth.userRole)) {
+      links.push(
+        <li className="nav-item" key="validate-payment">
+          <Link className="nav-link text-white" to="/validate-payment">
+            Validate Payment
+          </Link>
+        </li>
+      );
+      links.push(
+        <li className="nav-item" key="payments-by-order">
+          <Link className="nav-link text-white" to="/payments-by-order">
+            Payments By Order ID
+          </Link>
+        </li>
+      );
+    }
+    if (["admin", "customer"].includes(auth.userRole)) {
+      links.push(
+        <li className="nav-item" key="order-history">
+          <Link className="nav-link text-white" to="/order-history">
+            Order History
+          </Link>
+        </li>
+      );
+    }
+    if (["admin", "seller"].includes(auth.userRole)) {
+      links.push(
+        <li className="nav-item" key="report">
+          <Link className="nav-link text-white" to="/report">
+            Reports
+          </Link>
+        </li>
+      );
+    }
+
+    return links;
+  };
+
   return (
     <div
       ref={sidebarRef}
-      className={`sidebar bg-dark text-white ${isOpen ? "d-block" : "d-none d-md-block"}`}
+      className={`sidebar bg-dark text-white ${
+        isOpen ? "d-block" : "d-none d-md-block"
+      }`}
       style={{
         position: "absolute",
         top: "56px",
@@ -127,6 +231,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             </>
           )}
         </ul>
+        <ul className="nav flex-column">{renderLinks()}</ul>
       </div>
     </div>
   );

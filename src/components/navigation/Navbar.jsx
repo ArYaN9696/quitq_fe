@@ -22,7 +22,7 @@ const Navbar = ({ toggleSidebar }) => {
           marginRight: "10px",
         }}
       >
-        |||
+        🧾
       </button>
       <div className="container-fluid">
         <Link className="navbar-brand" to="/products">
@@ -38,7 +38,7 @@ const Navbar = ({ toggleSidebar }) => {
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/cart">
-                cart
+              🛒
               </Link>
             </li>
             {auth.token ? (
