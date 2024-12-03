@@ -1,12 +1,31 @@
-import React, { useState } from 'react';
-import { processPayment } from '../../services/paymentService';
+import React, { useState, useEffect } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { processPayment } from "../../services/paymentService";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProcessPayment = () => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [paymentData, setPaymentData] = useState({
-    orderId: '',
-    paymentMethod: '',
-    amount: '',
+    orderId: "",
+    paymentMethod: "",
+    amount: "",
   });
+
+  useEffect(() => {
+    const orderId = searchParams.get("orderId");
+    const paymentMethod = searchParams.get("paymentMethod");
+    const amount = searchParams.get("amount");
+
+    if (orderId && amount) {
+      setPaymentData({
+        orderId,
+        paymentMethod: paymentMethod || "",
+        amount,
+      });
+    }
+  }, [searchParams]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,22 +35,39 @@ const ProcessPayment = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Ensure proper formatting of the payload
     const formattedData = {
-      orderId: parseInt(paymentData.orderId, 10), // Ensure orderId is an integer
+      orderId: parseInt(paymentData.orderId, 10),
       paymentMethod: paymentData.paymentMethod,
-      amount: parseFloat(paymentData.amount), // Ensure amount is a decimal
+      amount: parseFloat(paymentData.amount),
     };
 
     try {
       console.log("Submitting payment:", formattedData);
       const response = await processPayment(formattedData);
-      alert(`Payment processed successfully: ${response.message}`);
+
+      toast.success(`Payment processed successfully: ${response.message}`);
+      setTimeout(() => {
+        navigate("/order-history");
+      }, 2000);
     } catch (error) {
-      console.error("Error processing payment:", error.response?.data || error.message);
-      alert(error.response?.data?.message || "Failed to process payment. Please try again.");
+      console.error(
+        "Error processing payment:",
+        error.response?.data || error.message
+      );
+      toast.error(
+        error.response?.data?.message ||
+          "Failed to process payment. Please try again."
+      );
     }
   };
+
+  const paymentOptions = [
+    "Credit Card",
+    "Debit Card",
+    "Net Banking",
+    "UPI",
+    "Cash on Delivery",
+  ];
 
   return (
     <form onSubmit={handleSubmit} className="container mt-4">
@@ -45,6 +81,7 @@ const ProcessPayment = () => {
           value={paymentData.orderId}
           onChange={handleChange}
           required
+          readOnly
         />
       </div>
       <div className="mb-3">
@@ -56,11 +93,11 @@ const ProcessPayment = () => {
           onChange={handleChange}
           required
         >
-          <option value="">Select Payment Method</option>
-          <option value="Credit Card">Credit Card</option>
-          <option value="Debit Card">Debit Card</option>
-          <option value="Net Banking">Net Banking</option>
-          <option value="UPI">UPI</option>
+          {paymentOptions.map((method) => (
+            <option key={method} value={method}>
+              {method}
+            </option>
+          ))}
         </select>
       </div>
       <div className="mb-3">
@@ -73,6 +110,7 @@ const ProcessPayment = () => {
           value={paymentData.amount}
           onChange={handleChange}
           required
+          readOnly
         />
       </div>
       <button type="submit" className="btn btn-primary">

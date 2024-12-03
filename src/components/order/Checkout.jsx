@@ -33,6 +33,11 @@ const Checkout = () => {
       return;
     }
 
+    const totalAmount = cart.cartItems.reduce(
+      (total, item) => total + item.quantity * (item.price || 0),
+      0
+    );
+
     const orderDetails = {
       shippingAddress,
       paymentMethod,
@@ -45,15 +50,16 @@ const Checkout = () => {
     };
 
     try {
-      console.log("Order Payload:", orderDetails); 
+      console.log("Order Payload:", orderDetails);
       const orderResponse = await dispatch(createOrder(orderDetails)).unwrap();
-      console.log("Order Created Successfully:", orderResponse); 
-
-      alert(`Order placed successfully! Order ID: ${orderResponse.orderId}`);
+      console.log("Order Created Successfully:", orderResponse);
 
       await dispatch(clearCartThunk()).unwrap();
 
-      navigate("/order-success");
+      // Redirect to the Process Payment page with orderId, paymentMethod, and amount
+      navigate(
+        `/process-payment?orderId=${orderResponse.orderId}&paymentMethod=${paymentMethod}&amount=${totalAmount}`
+      );
     } catch (error) {
       console.error("Order creation failed:", error);
       alert(error.message || "Failed to create order. Please try again.");
@@ -70,11 +76,18 @@ const Checkout = () => {
     currency: "INR",
   });
 
+  const paymentOptions = [
+    "Credit Card",
+    "Debit Card",
+    "Net Banking",
+    "UPI",
+    "Cash on Delivery",
+  ];
+
   return (
     <div className="container mt-5">
       <h1 className="mb-4 text-center">Checkout</h1>
 
-      {/* Shipping Address Form */}
       <div className="card mb-4">
         <div className="card-body">
           <h2 className="h5 mb-3">Shipping Address</h2>
@@ -86,26 +99,25 @@ const Checkout = () => {
             rows="3"
           />
 
-          {/* Payment Method Selection */}
           <h2 className="h5 mb-3">Payment Method</h2>
           <select
             className="form-select mb-4"
             value={paymentMethod}
             onChange={(e) => setPaymentMethod(e.target.value)}
           >
-            <option value="Credit Card">Credit Card</option>
-            <option value="PayPal">PayPal</option>
-            <option value="Cash on Delivery">Cash on Delivery</option>
+            {paymentOptions.map((method) => (
+              <option key={method} value={method}>
+                {method}
+              </option>
+            ))}
           </select>
         </div>
       </div>
 
-      {/* Order Summary */}
       <div className="card mb-4">
         <div className="card-body">
           <h2 className="h5 mb-3">Order Summary</h2>
 
-          {/* Displaying the cart items */}
           {cart.cartItems && cart.cartItems.length > 0 ? (
             <ul className="list-group mb-3">
               {cart.cartItems.map((item) => (
