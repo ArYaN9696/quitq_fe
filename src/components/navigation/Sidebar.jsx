@@ -155,6 +155,82 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       }}
     >
       <div className="p-3">
+        <ul className="nav flex-column">
+          {/* <li className="nav-item">
+            <Link className="nav-link text-white" to="/dashboard">
+              Dashboard
+            </Link>
+          </li> */}
+          {auth.token ? (
+            <>
+              <li className="nav-item">
+                <Link className="nav-link text-white" to="/category-page">
+                  Categories
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link text-white" to="/products">
+                  Products
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link text-white" to="/cart">
+                  Cart
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link text-white" to="/process-payment">
+                  Payment
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link text-white" to="/validate-payment">
+                  Validate Payment
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link text-white" to="/payments-by-order">
+                  Payments By Order Id
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link text-white" to="/order-history">
+                  Order History
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link text-white" to="/checkout">
+                  Checkout
+                </Link>
+              </li>
+              {(auth.userRole === "admin" || auth.userRole === "seller") && (
+                <li className="nav-item">
+                  <Link className="nav-link text-white" to="/report">
+                    Reports
+                  </Link>
+                </li> &&
+                <li className="nav-item">
+                <Link className="nav-link text-white" to="/update-order-status">
+                  Update Order Status
+                </Link>
+              </li>
+              )}
+            </>
+          ) : (
+            <>
+              <li className="nav-item">
+                <Link className="nav-link text-white" to="/login">
+                  Login
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link text-white" to="/register">
+                  Register
+                </Link>
+              </li>
+            </>
+          )}
+        </ul>
         <ul className="nav flex-column">{renderLinks()}</ul>
       </div>
     </div>
