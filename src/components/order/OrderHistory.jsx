@@ -15,6 +15,9 @@ const OrderHistory = () => {
   const status = useSelector(selectOrderStatus);
   const error = useSelector(selectOrderError);
 
+  // Assuming user role is stored in localStorage
+  const userRole = localStorage.getItem("userRole"); // can be "user" or "seller"
+
   useEffect(() => {
     dispatch(fetchUserOrders());
   }, [dispatch]);
@@ -37,6 +40,23 @@ const OrderHistory = () => {
 
   const isOrdersEmpty = !Array.isArray(orders) || orders.length === 0;
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    if (isNaN(date)) {
+      return "Invalid Date";
+    }
+    return date.toLocaleDateString();
+  };
+
+  const handleStatusUpdate = (orderId) => {
+    // Call a function to update the order status (for sellers)
+    if (userRole === "seller") {
+      // Implement the update status logic here
+    } else {
+      toast.error("You are not authorized to update the status.");
+    }
+  };
+
   return (
     <div className="container mt-5">
       <h2 className="mb-4 text-center">Order History</h2>
@@ -51,15 +71,28 @@ const OrderHistory = () => {
                 <th>Date</th>
                 <th>Total Amount</th>
                 <th>Status</th>
+                {userRole === "seller" && <th>Actions</th>}{" "}
+                {/* Only show action button for seller */}
               </tr>
             </thead>
             <tbody>
               {orders.map((order) => (
                 <tr key={order.orderId}>
                   <td>{order.orderId}</td>
-                  <td>{new Date(order.orderDate).toLocaleDateString()}</td>
+                  <td>{formatDate(order.orderDate)}</td>{" "}
                   <td>₹{order.totalAmount.toFixed(2)}</td>
                   <td>{order.status}</td>
+                  {userRole === "seller" && (
+                    <td>
+                      {/* Render button to update status for sellers only */}
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => handleStatusUpdate(order.orderId)}
+                      >
+                        Update Status
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>

@@ -22,6 +22,31 @@ export const getUserOrders = async () => {
   }
 };
 
+export const updateOrderStatus = async (orderId, statusId) => {
+    const token = localStorage.getItem("jwt_token");
+  
+    if (!token) {
+      throw new Error("User not authenticated.");
+    }
+  
+    try {
+      const response = await axios.put(
+        `${API_URL}/${orderId}/status`, 
+        { statusId }, 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error updating order status:", error.response || error.message);
+      throw error.response?.data || { message: "Failed to update order status." };
+    }
+  };
+
+
 export const createOrder = async (orderDetails) => {
   const token = localStorage.getItem("jwt_token");
 
@@ -45,4 +70,5 @@ export const createOrder = async (orderDetails) => {
 export default {
   getUserOrders,
   createOrder,
+  updateOrderStatus
 };

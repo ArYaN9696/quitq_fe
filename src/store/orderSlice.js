@@ -30,7 +30,18 @@ export const fetchUserOrders = createAsyncThunk(
   }
 );
 
-// Async thunk to create a new order
+export const updateOrderStatus = createAsyncThunk(
+    "orders/updateOrderStatus",
+    async ({ orderId, statusId }, { rejectWithValue }) => {
+      try {
+        const response = await orderService.updateOrderStatus(orderId, statusId);
+        return response;
+      } catch (error) {
+        return rejectWithValue(error.response?.data || error.message);
+      }
+    }
+  );
+
 export const createOrder = createAsyncThunk(
   "order/createOrder",
   async (orderDetails, { rejectWithValue }) => {
@@ -91,6 +102,21 @@ const orderSlice = createSlice({
         state.orderDetails = action.payload; 
       })
       .addCase(createOrder.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateOrderStatus.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateOrderStatus.fulfilled, (state, action) => {
+        state.loading = false;
+        const updatedOrder = action.payload;
+        state.orders = state.orders.map((order) =>
+          order.orderId === updatedOrder.orderId ? updatedOrder : order
+        );
+      })
+      .addCase(updateOrderStatus.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
