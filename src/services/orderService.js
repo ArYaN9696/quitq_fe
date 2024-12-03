@@ -5,7 +5,7 @@ const API_URL = "https://localhost:7275/api/Order";
 const getUserOrders = async () => {
   const response = await axios.get(`${API_URL}/user`, {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`, // Use token-based authentication
+      Authorization: `Bearer ${localStorage.getItem("jwt_token")}`, // Use token-based authentication
     },
   });
   return response.data;
