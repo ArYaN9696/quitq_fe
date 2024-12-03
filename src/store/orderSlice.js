@@ -36,9 +36,10 @@ export const createOrder = createAsyncThunk(
   async (orderDetails, { rejectWithValue }) => {
     try {
       const response = await orderService.createOrder(orderDetails);
-      return response;
+      console.log("Order Created:", response); // Debugging
+      return response; // Pass the backend response
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.message || "Failed to create order.");
     }
   }
 );
@@ -47,6 +48,7 @@ const orderSlice = createSlice({
   name: "orders",
   initialState: {
     orderDetails: null,
+    orders: [],
     loading: false,
     error: null,
   },
@@ -78,14 +80,16 @@ const orderSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(createOrder.pending, (state) => {
-        state.status = "loading";
+        state.loading = true;
+        state.error = null;
       })
       .addCase(createOrder.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.orders.push(action.payload);
+        state.loading = false;
+        state.orderDetails = action.payload; // Save the returned order details
+        state.orders.push(action.payload); // Add the order to the list
       })
       .addCase(createOrder.rejected, (state, action) => {
-        state.status = "failed";
+        state.loading = false;
         state.error = action.payload;
       });
   },
