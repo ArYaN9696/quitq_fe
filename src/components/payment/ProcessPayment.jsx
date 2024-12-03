@@ -34,7 +34,7 @@ const ProcessPayment = () => {
     const formattedData = {
       orderId: parseInt(paymentData.orderId, 10),
       paymentMethod: paymentData.paymentMethod,
-      amount: parseFloat(paymentData.amount), 
+      amount: parseFloat(paymentData.amount),
     };
 
     try {
@@ -42,16 +42,18 @@ const ProcessPayment = () => {
       const response = await processPayment(formattedData);
       alert(`Payment processed successfully: ${response.message}`);
     } catch (error) {
-      console.error(
-        "Error processing payment:",
-        error.response?.data || error.message
-      );
-      alert(
-        error.response?.data?.message ||
-          "Failed to process payment. Please try again."
-      );
+      console.error("Error processing payment:", error.response?.data || error.message);
+      alert(error.response?.data?.message || "Failed to process payment. Please try again.");
     }
   };
+
+  const paymentOptions = [
+    "Credit Card",
+    "Debit Card",
+    "Net Banking",
+    "UPI",
+    "Cash on Delivery",
+  ];
 
   return (
     <form onSubmit={handleSubmit} className="container mt-4">
@@ -77,11 +79,11 @@ const ProcessPayment = () => {
           onChange={handleChange}
           required
         >
-          <option value="">Select Payment Method</option>
-          <option value="Credit Card">Credit Card</option>
-          <option value="Debit Card">Debit Card</option>
-          <option value="Net Banking">Net Banking</option>
-          <option value="UPI">UPI</option>
+          {paymentOptions.map((method) => (
+            <option key={method} value={method}>
+              {method}
+            </option>
+          ))}
         </select>
       </div>
       <div className="mb-3">
