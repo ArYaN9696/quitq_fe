@@ -26,10 +26,15 @@ const ProductCard = ({ product }) => {
 
       console.log('Submitting cart item:', cartItem);
       const response = await addToCart(cartItem);
-      toast.success(response.message || 'Product added to cart successfully!', { position: "top-right" });
+
+      if (response?.message) {
+        toast.success(response.message, { position: "top-right" });
+      } else {
+        toast.success('Product added to cart successfully!', { position: "top-right" });
+      }
     } catch (error) {
       console.error('Error adding product to cart:', error);
-      toast.error(error.message || 'Failed to add product to cart.', { position: "top-right" });
+      toast.error(error.response?.data?.message || 'Failed to add product to cart.', { position: "top-right" });
     }
   };
 

@@ -58,8 +58,9 @@ const cartSlice = createSlice({
   },
   reducers: {
     setCart: (state, action) => {
-      state.cartItems = action.payload.items;
-      state.total = action.payload.items.reduce(
+      const items = Array.isArray(action.payload) ? action.payload : [];
+      state.cartItems = items;
+      state.total = items.reduce(
         (total, item) => total + item.quantity * item.price,
         0
       );
@@ -74,9 +75,10 @@ const cartSlice = createSlice({
         state.status = "loading";
       })
       .addCase(getCartItems.fulfilled, (state, action) => {
+        const items = Array.isArray(action.payload) ? action.payload : [];
         state.status = "succeeded";
-        state.cartItems = action.payload;
-        state.total = action.payload.reduce(
+        state.cartItems = items;
+        state.total = items.reduce(
           (total, item) => total + item.quantity * item.price,
           0
         );
@@ -90,3 +92,4 @@ const cartSlice = createSlice({
 
 export const { resetError, setCart } = cartSlice.actions;
 export default cartSlice.reducer;
+
