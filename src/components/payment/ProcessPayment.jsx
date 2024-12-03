@@ -1,12 +1,27 @@
-import React, { useState } from 'react';
-import { processPayment } from '../../services/paymentService';
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { processPayment } from "../../services/paymentService";
 
 const ProcessPayment = () => {
+  const [searchParams] = useSearchParams();
   const [paymentData, setPaymentData] = useState({
-    orderId: '',
-    paymentMethod: '',
-    amount: '',
+    orderId: "",
+    paymentMethod: "",
+    amount: "",
   });
+
+  useEffect(() => {
+    const orderId = searchParams.get("orderId");
+    const paymentMethod = searchParams.get("paymentMethod");
+
+    if (orderId) {
+      setPaymentData((prev) => ({
+        ...prev,
+        orderId,
+        paymentMethod: paymentMethod || "",
+      }));
+    }
+  }, [searchParams]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,11 +31,10 @@ const ProcessPayment = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Ensure proper formatting of the payload
     const formattedData = {
-      orderId: parseInt(paymentData.orderId, 10), // Ensure orderId is an integer
+      orderId: parseInt(paymentData.orderId, 10),
       paymentMethod: paymentData.paymentMethod,
-      amount: parseFloat(paymentData.amount), // Ensure amount is a decimal
+      amount: parseFloat(paymentData.amount), 
     };
 
     try {
@@ -28,8 +42,14 @@ const ProcessPayment = () => {
       const response = await processPayment(formattedData);
       alert(`Payment processed successfully: ${response.message}`);
     } catch (error) {
-      console.error("Error processing payment:", error.response?.data || error.message);
-      alert(error.response?.data?.message || "Failed to process payment. Please try again.");
+      console.error(
+        "Error processing payment:",
+        error.response?.data || error.message
+      );
+      alert(
+        error.response?.data?.message ||
+          "Failed to process payment. Please try again."
+      );
     }
   };
 
@@ -45,6 +65,7 @@ const ProcessPayment = () => {
           value={paymentData.orderId}
           onChange={handleChange}
           required
+          readOnly
         />
       </div>
       <div className="mb-3">
