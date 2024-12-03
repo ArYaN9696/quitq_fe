@@ -80,7 +80,7 @@ const Cart = () => {
       <h2>Your Cart</h2>
 
       {/* Add to Cart Form */}
-      <form onSubmit={handleAddToCart} className="mt-4">
+      {/* <form onSubmit={handleAddToCart} className="mt-4">
         <div className="row">
           <div className="col-md-4">
             <input
@@ -120,7 +120,7 @@ const Cart = () => {
             </button>
           </div>
         </div>
-      </form>
+      </form> */}
 
       {/* Cart Items Table */}
       {cartItems.length === 0 ? (
