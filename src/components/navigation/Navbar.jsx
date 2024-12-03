@@ -11,35 +11,34 @@ const Navbar = ({ toggleSidebar }) => {
       className="navbar navbar-expand-lg navbar-dark bg-dark"
       style={{ position: "fixed", top: 0, width: "100%", zIndex: 999 }}
     >
+      <button
+        className="btn btn-outline-light"
+        onClick={toggleSidebar}
+        style={{
+          fontSize: "24px",
+          border: "none",
+          background: "transparent",
+          padding: "0",
+          marginRight: "10px",
+        }}
+      >
+        |||
+      </button>
       <div className="container-fluid">
-        <Link className="navbar-brand" to="/">
+        <Link className="navbar-brand" to="/products">
           QuitQ
         </Link>
-
-        <button
-          className="btn btn-outline-light"
-          onClick={toggleSidebar}
-          style={{
-            fontSize: "24px",
-            border: "none",
-            background: "transparent",
-            padding: "0",
-            marginRight: "10px",
-          }}
-        >
-          ⏸
-        </button>
 
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
-              <Link className="nav-link active" to="/">
+              <Link className="nav-link active" to="/products">
                 Home
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/dashboard">
-                Dashboard
+              <Link className="nav-link" to="/cart">
+                cart
               </Link>
             </li>
             {auth.token ? (

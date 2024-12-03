@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { processPayment } from "../../services/paymentService";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProcessPayment = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [paymentData, setPaymentData] = useState({
     orderId: "",
     paymentMethod: "",
@@ -13,13 +16,14 @@ const ProcessPayment = () => {
   useEffect(() => {
     const orderId = searchParams.get("orderId");
     const paymentMethod = searchParams.get("paymentMethod");
+    const amount = searchParams.get("amount");
 
-    if (orderId) {
-      setPaymentData((prev) => ({
-        ...prev,
+    if (orderId && amount) {
+      setPaymentData({
         orderId,
         paymentMethod: paymentMethod || "",
-      }));
+        amount,
+      });
     }
   }, [searchParams]);
 
@@ -40,10 +44,20 @@ const ProcessPayment = () => {
     try {
       console.log("Submitting payment:", formattedData);
       const response = await processPayment(formattedData);
-      alert(`Payment processed successfully: ${response.message}`);
+
+      toast.success(`Payment processed successfully: ${response.message}`);
+      setTimeout(() => {
+        navigate("/order-history");
+      }, 2000);
     } catch (error) {
-      console.error("Error processing payment:", error.response?.data || error.message);
-      alert(error.response?.data?.message || "Failed to process payment. Please try again.");
+      console.error(
+        "Error processing payment:",
+        error.response?.data || error.message
+      );
+      toast.error(
+        error.response?.data?.message ||
+          "Failed to process payment. Please try again."
+      );
     }
   };
 
@@ -96,6 +110,7 @@ const ProcessPayment = () => {
           value={paymentData.amount}
           onChange={handleChange}
           required
+          readOnly
         />
       </div>
       <button type="submit" className="btn btn-primary">

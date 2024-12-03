@@ -8,10 +8,12 @@ import {
   clearCartThunk,
 } from '../../store/cartSlice';
 import useAuth from '../../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {
   const { auth } = useAuth();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.cartItems || []);
   const status = useSelector((state) => state.cart.status);
   const error = useSelector((state) => state.cart.error);
@@ -70,6 +72,10 @@ const Cart = () => {
     } catch (error) {
       console.error('Error clearing cart:', error);
     }
+  };
+
+  const handleCheckout = () => {
+    navigate('/checkout');
   };
 
   if (status === 'loading') return <div className="text-center mt-4">Loading cart items...</div>;
@@ -164,9 +170,14 @@ const Cart = () => {
       )}
 
       {cartItems.length > 0 && (
-        <button className="btn btn-warning mt-3" onClick={handleClearCart}>
-          Clear Cart
-        </button>
+        <div className="d-flex justify-content-between align-items-center mt-3">
+          <button className="btn btn-warning" onClick={handleClearCart}>
+            Clear Cart
+          </button>
+          <button className="btn btn-success" onClick={handleCheckout}>
+            Proceed to Checkout
+          </button>
+        </div>
       )}
     </div>
   );

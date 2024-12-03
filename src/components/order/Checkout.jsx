@@ -33,6 +33,11 @@ const Checkout = () => {
       return;
     }
 
+    const totalAmount = cart.cartItems.reduce(
+      (total, item) => total + item.quantity * (item.price || 0),
+      0
+    );
+
     const orderDetails = {
       shippingAddress,
       paymentMethod,
@@ -51,8 +56,9 @@ const Checkout = () => {
 
       await dispatch(clearCartThunk()).unwrap();
 
+      // Redirect to the Process Payment page with orderId, paymentMethod, and amount
       navigate(
-        `/process-payment?orderId=${orderResponse.orderId}&paymentMethod=${paymentMethod}`
+        `/process-payment?orderId=${orderResponse.orderId}&paymentMethod=${paymentMethod}&amount=${totalAmount}`
       );
     } catch (error) {
       console.error("Order creation failed:", error);
