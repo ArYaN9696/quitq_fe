@@ -22,7 +22,7 @@ const Navbar = ({ toggleSidebar }) => {
           marginRight: "10px",
         }}
       >
-        🧾
+        ☰
       </button>
       <div className="container-fluid">
         <Link className="navbar-brand" to="/products">
