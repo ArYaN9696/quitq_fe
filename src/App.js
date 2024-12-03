@@ -23,6 +23,7 @@ import useAuth from "./hooks/useAuth";
 import ProcessPayment from "./components/payment/ProcessPayment.jsx";
 import ValidatePayment from "./components/payment/ValidatePayment.jsx";
 import PaymentsByOrder from "./components/payment/PaymentsByOrder.jsx";
+import UpdateOrderStatus from "./components/order/UpdateOrderStatus.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx"
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -131,6 +132,15 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
+                <Route
+                  path="/update-order-status"
+                  element={
+                  <ProtectedRoute allowedRoles={["seller", "admin"]}>
+                   <UpdateOrderStatus />
+                    </ProtectedRoute>
+                  }
+                />
+
                 <Route
                   path="/report"
                   element={

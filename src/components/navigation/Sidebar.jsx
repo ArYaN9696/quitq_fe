@@ -104,7 +104,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                   <Link className="nav-link text-white" to="/report">
                     Reports
                   </Link>
-                </li>
+                </li> &&
+                <li className="nav-item">
+                <Link className="nav-link text-white" to="/update-order-status">
+                  Update Order Status
+                </Link>
+              </li>
               )}
             </>
           ) : (

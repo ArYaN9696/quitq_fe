@@ -23,28 +23,29 @@ export const getUserOrders = async () => {
 };
 
 export const updateOrderStatus = async (orderId, statusId) => {
-    const token = localStorage.getItem("jwt_token");
-  
-    if (!token) {
-      throw new Error("User not authenticated.");
-    }
-  
-    try {
-      const response = await axios.put(
-        `${API_URL}/${orderId}/status`, 
-        { statusId }, 
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Error updating order status:", error.response || error.message);
-      throw error.response?.data || { message: "Failed to update order status." };
-    }
-  };
+  const token = localStorage.getItem("jwt_token");
+
+  if (!token) {
+    throw new Error("User not authenticated.");
+  }
+
+  try {
+    const response = await axios.put(
+      `${API_URL}/${orderId}/status`, 
+      statusId, // Send the statusId directly as raw data
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json", // Ensure proper content type
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating order status:", error.response || error.message);
+    throw error.response?.data || { message: "Failed to update order status." };
+  }
+};
 
 
 export const createOrder = async (orderDetails) => {
