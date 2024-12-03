@@ -2,31 +2,45 @@ import axios from "axios";
 
 const API_URL = "https://localhost:7275/api/Order";
 
-const getUserOrders = async () => {
-  const response = await axios.get(`${API_URL}/user`, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`, // Use token-based authentication
-    },
-  });
-  return response.data;
-};
+export const getUserOrders = async () => {
+  const token = localStorage.getItem("jwt_token");
 
-// services/orderService.js
-export const createOrder = async (orderDetails) => {
+  if (!token) {
+    throw new Error("User not authenticated.");
+  }
+
   try {
-    const response = await axios.post("https://localhost:7275/api/Order", orderDetails, {
+    const response = await axios.get(`${API_URL}/user`, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("jwt_token")}`,
+        Authorization: `Bearer ${token}`,
       },
     });
-    console.log("Order API Response:", response.data); // Debugging
-    return response.data; // Always return the data property
+    return response.data;
   } catch (error) {
-    console.error("Error creating order:", error.response || error.message);
-    throw error.response?.data || { message: "Unknown error occurred" };
+    console.error("Error fetching orders:", error.response || error.message);
+    throw error.response?.data || { message: "Failed to fetch orders." };
   }
 };
 
+export const createOrder = async (orderDetails) => {
+  const token = localStorage.getItem("jwt_token");
+
+  if (!token) {
+    throw new Error("User not authenticated.");
+  }
+
+  try {
+    const response = await axios.post(API_URL, orderDetails, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error creating order:", error.response || error.message);
+    throw error.response?.data || { message: "Failed to create order." };
+  }
+};
 
 export default {
   getUserOrders,

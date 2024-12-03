@@ -35,7 +35,6 @@ const OrderHistory = () => {
     );
   }
 
-  // Ensure orders is an array and check if it's empty
   const isOrdersEmpty = !Array.isArray(orders) || orders.length === 0;
 
   return (
@@ -59,7 +58,7 @@ const OrderHistory = () => {
                 <tr key={order.orderId}>
                   <td>{order.orderId}</td>
                   <td>{new Date(order.orderDate).toLocaleDateString()}</td>
-                  <td>${order.totalAmount.toFixed(2)}</td>
+                  <td>₹{order.totalAmount.toFixed(2)}</td>
                   <td>{order.status}</td>
                 </tr>
               ))}

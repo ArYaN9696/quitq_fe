@@ -10,7 +10,9 @@ const Checkout = () => {
   const navigate = useNavigate();
 
   const { auth } = useAuth();
-  const cart = useSelector((state) => state.cart || { cartItems: [], total: 0 });
+  const cart = useSelector(
+    (state) => state.cart || { cartItems: [], total: 0 }
+  );
 
   const [shippingAddress, setShippingAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("Credit Card");
@@ -31,7 +33,6 @@ const Checkout = () => {
       return;
     }
 
-    // Exclude ProductName when sending the payload
     const orderDetails = {
       shippingAddress,
       paymentMethod,
@@ -44,9 +45,9 @@ const Checkout = () => {
     };
 
     try {
-      console.log("Order Payload:", orderDetails); // Debugging payload
+      console.log("Order Payload:", orderDetails); 
       const orderResponse = await dispatch(createOrder(orderDetails)).unwrap();
-      console.log("Order Created Successfully:", orderResponse); // Debugging response
+      console.log("Order Created Successfully:", orderResponse); 
 
       alert(`Order placed successfully! Order ID: ${orderResponse.orderId}`);
 
@@ -115,42 +116,34 @@ const Checkout = () => {
                   <div>
                     <strong>{item.productName || "Unnamed Product"}</strong>
                     <br />
-                    <small>₹{item.price?.toFixed(2) || "0.00"} each</small>
+                    <small>
+                      ₹{item.price?.toFixed(2) || "0.00"} x {item.quantity}
+                    </small>
                   </div>
-                  <div className="text-end">
-                    <div>
-                      {item.quantity} x ₹{item.price?.toFixed(2) || "0.00"}
-                    </div>
-                    <strong>
-                      ₹{(item.quantity * (item.price || 0)).toFixed(2)}
-                    </strong>
-                  </div>
+                  <span className="badge bg-primary rounded-pill">
+                    ₹{(item.quantity * item.price || 0).toFixed(2)}
+                  </span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p>No items in the cart</p>
+            <p>No items in cart.</p>
           )}
 
-          {/* Display total price in INR */}
-          <p className="h5 text-end mb-0">
-            <strong>Total:</strong> {totalFormatted}
-          </p>
-        </div>
-      </div>
+          <div className="d-flex justify-content-between">
+            <strong>Total:</strong>
+            <span>{totalFormatted}</span>
+          </div>
 
-      {/* Place Order Button */}
-      <div className="text-center">
-        <button
-          className="btn btn-primary btn-lg"
-          onClick={handleOrderCreation}
-        >
-          Place Order
-        </button>
+          <div className="d-grid gap-2 mt-4">
+            <button className="btn btn-primary" onClick={handleOrderCreation}>
+              Place Order
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
 export default Checkout;
-
