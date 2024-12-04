@@ -32,11 +32,11 @@ export const updateOrderStatus = async (orderId, statusId) => {
   try {
     const response = await axios.put(
       `${API_URL}/${orderId}/status`, 
-      statusId, // Send the statusId directly as raw data
+      statusId,
       {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json", // Ensure proper content type
+          "Content-Type": "application/json",
         },
       }
     );
