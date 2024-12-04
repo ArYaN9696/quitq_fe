@@ -13,7 +13,6 @@ const OrderHistory = () => {
   const orders = useSelector(selectOrders);
   const status = useSelector(selectOrderStatus);
   const error = useSelector(selectOrderError);
-
   const userRole = localStorage.getItem("userRole");
 
   useEffect(() => {
@@ -26,6 +25,11 @@ const OrderHistory = () => {
     }
   }, [status, error]);
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return isNaN(date) ? "Invalid Date" : date.toLocaleDateString();
+  };
+
   if (status === "loading") {
     return (
       <div className="text-center mt-5">
@@ -37,15 +41,6 @@ const OrderHistory = () => {
   }
 
   const isOrdersEmpty = !orders || orders.length === 0;
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return isNaN(date) ? "Invalid Date" : date.toLocaleDateString();
-  };
-
-  const getDefaultStatus = (status) => {
-    return status || "Pending";
-  };
 
   return (
     <div className="container mt-5">
@@ -70,14 +65,16 @@ const OrderHistory = () => {
                   <td>{order.orderId}</td>
                   <td>{formatDate(order.orderDate)}</td>
                   <td>₹{order.totalAmount.toFixed(2)}</td>
-                  <td>{getDefaultStatus(order.status)}</td>
+                  <td>{order.status || "Pending"}</td>
                   {userRole === "seller" && (
                     <td>
                       <button
                         className="btn btn-primary"
-                        onClick={() => {
-                          toast.info("Use the Update Order Status page.");
-                        }}
+                        onClick={() =>
+                          toast.info(
+                            "Please use the Update Order Status page to update status."
+                          )
+                        }
                       >
                         Update Status
                       </button>

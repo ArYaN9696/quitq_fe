@@ -9,7 +9,9 @@ export const fetchOrderById = createAsyncThunk(
   async (orderId, thunkAPI) => {
     try {
       const response = await axios.get(`${API_BASE_URL}/${orderId}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("jwt_token")}` }, 
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt_token")}`,
+        },
       });
       return response.data;
     } catch (error) {
@@ -18,43 +20,42 @@ export const fetchOrderById = createAsyncThunk(
   }
 );
 
-
 export const fetchUserOrders = createAsyncThunk(
   "orders/fetchUserOrders",
   async (_, { rejectWithValue }) => {
     try {
       return await orderService.getUserOrders();
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Failed to fetch orders");
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to fetch orders"
+      );
     }
   }
 );
 
 export const updateOrderStatus = createAsyncThunk(
-    "orders/updateOrderStatus",
-    async ({ orderId, statusId }, { rejectWithValue }) => {
-      try {
-        const response = await orderService.updateOrderStatus(orderId, statusId);
-        return response;
-      } catch (error) {
-        return rejectWithValue(error.response?.data || error.message);
-      }
+  "orders/updateOrderStatus",
+  async ({ orderId, statusId }, { rejectWithValue }) => {
+    try {
+      const response = await orderService.updateOrderStatus(orderId, statusId);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
     }
-  );
+  }
+);
 
 export const createOrder = createAsyncThunk(
   "order/createOrder",
   async (orderDetails, { rejectWithValue }) => {
     try {
       const response = await orderService.createOrder(orderDetails);
-      return response;
+      return response.data;
     } catch (error) {
       return rejectWithValue(error.message || "Failed to create order.");
     }
   }
 );
-
-
 
 const orderSlice = createSlice({
   name: "orders",
@@ -63,7 +64,7 @@ const orderSlice = createSlice({
     orders: [],
     status: "idle",
     loading: false,
-    error: null, 
+    error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -80,28 +81,26 @@ const orderSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      
       .addCase(fetchUserOrders.pending, (state) => {
         state.status = "loading";
         state.error = null;
       })
       .addCase(fetchUserOrders.fulfilled, (state, action) => {
-        state.status = "succeeded"; 
-        state.orders = action.payload; 
+        state.status = "succeeded";
+        state.orders = action.payload;
       })
       .addCase(fetchUserOrders.rejected, (state, action) => {
-        state.status = "failed";  
-        state.error = action.payload; 
+        state.status = "failed";
+        state.error = action.payload;
       })
-
       .addCase(createOrder.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.loading = false;
-        state.orders.push(action.payload); 
-        state.orderDetails = action.payload; 
+        state.orders.push(action.payload);
+        state.orderDetails = action.payload;
       })
       .addCase(createOrder.rejected, (state, action) => {
         state.loading = false;
