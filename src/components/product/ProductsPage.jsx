@@ -13,26 +13,26 @@ const ProductsPage = () => {
 
   useEffect(() => {
     const loadProducts = async () => {
-      const fetchedProducts = await getAllProducts(); // Replace with API call to fetch products
+      const fetchedProducts = await getAllProducts();
       setProducts(fetchedProducts);
     };
     loadProducts();
   }, []);
 
   useEffect(() => {
-    if (!searchQuery) {
-      // If no search query, show all products
-      setFilteredProducts(products.filter((product) => product.price >= priceFilter.min && product.price <= priceFilter.max));
+    const filtered = products.filter((product) => {
+      const matchesSearch = product.productName
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+      const matchesPrice =
+        product.price >= priceFilter.min && product.price <= priceFilter.max;
+      return matchesSearch && matchesPrice;
+    });
+
+    // Reset filtered products when searchQuery is cleared
+    if (searchQuery === "") {
+      setFilteredProducts(products);
     } else {
-      // Filter products based on search query and price filter
-      const filtered = products.filter((product) => {
-        const matchesSearch = product.productName
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase());
-        const matchesPrice =
-          product.price >= priceFilter.min && product.price <= priceFilter.max;
-        return matchesSearch && matchesPrice;
-      });
       setFilteredProducts(filtered);
     }
   }, [searchQuery, priceFilter, products]);
@@ -49,11 +49,9 @@ const ProductsPage = () => {
             type="number"
             className="form-control"
             value={priceFilter.min}
-            onChange={(e) => {
-              const value = e.target.value;
-              setPriceFilter({ ...priceFilter, min: value === "" ? 0 : Number(value) });
-            }}
-            placeholder="Min"
+            onChange={(e) =>
+              setPriceFilter({ ...priceFilter, min: Number(e.target.value) })
+            }
           />
         </div>
         <div className="col-md-6">
@@ -61,15 +59,10 @@ const ProductsPage = () => {
           <input
             type="number"
             className="form-control"
-            value={priceFilter.max === Infinity ? "" : priceFilter.max}
-            onChange={(e) => {
-              const value = e.target.value;
-              setPriceFilter({
-                ...priceFilter,
-                max: value === "" ? Infinity : Number(value),
-              });
-            }}
-            placeholder="Max"
+            value={priceFilter.max}
+            onChange={(e) =>
+              setPriceFilter({ ...priceFilter, max: Number(e.target.value) })
+            }
           />
         </div>
       </div>

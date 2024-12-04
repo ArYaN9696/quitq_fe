@@ -5,13 +5,22 @@ import { ToastContainer } from "react-toastify";
 
 const Navbar = ({ toggleSidebar }) => {
   const { auth, logout } = useAuth();
-  const [searchTerm, setSearchTerm] = useState(""); // State for search input
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
-  const handleSearch = (e) => {
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    if (query === "") {
+      navigate("/products"); // Reset to show all products when search is cleared
+    }
+  };
+
+  const handleSearchSubmit = (e) => {
     e.preventDefault();
-    if (searchTerm.trim()) {
-      navigate(`/products?search=${encodeURIComponent(searchTerm)}`); // Navigate with search query
+    if (searchQuery.trim() !== "") {
+      navigate(`/products?search=${encodeURIComponent(searchQuery)}`);
     }
   };
 
@@ -31,23 +40,28 @@ const Navbar = ({ toggleSidebar }) => {
           marginRight: "10px",
         }}
       >
-        ☰
+        🧾
       </button>
       <div className="container-fluid">
         <Link className="navbar-brand" to="/products">
           QuitQ
         </Link>
 
-        <form className="d-flex me-auto" onSubmit={handleSearch}>
+        {/* Search Bar */}
+        <form className="d-flex ms-auto" onSubmit={handleSearchSubmit}>
           <input
             className="form-control me-2"
             type="search"
-            placeholder="Search products"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search"
             aria-label="Search"
+            value={searchQuery}
+            onChange={handleSearchChange}
           />
-          <button className="btn btn-outline-light" type="submit">
+          <button
+            className="btn btn-outline-light"
+            type="submit"
+            style={{ marginRight: "10px" }}
+          >
             Search
           </button>
         </form>
