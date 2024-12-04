@@ -28,17 +28,17 @@ const Checkout = () => {
       alert("Please enter a valid shipping address.");
       return;
     }
-
+  
     if (!auth || !auth.token) {
       alert("Please log in to place an order.");
       return;
     }
-
+  
     const totalAmount = cart.cartItems.reduce(
       (total, item) => total + item.quantity * (item.price || 0),
       0
     );
-
+  
     const orderDetails = {
       shippingAddress,
       paymentMethod,
@@ -49,14 +49,18 @@ const Checkout = () => {
         total: item.quantity * item.price,
       })),
     };
-
+  
     try {
       console.log("Order Payload:", orderDetails);
       const orderResponse = await dispatch(createOrder(orderDetails)).unwrap();
-      console.log("Order Created Successfully:", orderResponse);
-
+      console.log("Order Response:", orderResponse);
+  
+      if (!orderResponse.orderId) {
+        throw new Error("Order ID is missing from the response.");
+      }
+  
       await dispatch(clearCartThunk()).unwrap();
-
+  
       navigate(
         `/process-payment?orderId=${orderResponse.orderId}&paymentMethod=${paymentMethod}&amount=${totalAmount}`
       );
@@ -65,6 +69,7 @@ const Checkout = () => {
       alert(error.message || "Failed to create order. Please try again.");
     }
   };
+  
 
   const totalAmount = cart.cartItems.reduce(
     (total, item) => total + item.quantity * (item.price || 0),

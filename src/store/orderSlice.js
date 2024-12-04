@@ -50,7 +50,7 @@ export const createOrder = createAsyncThunk(
   async (orderDetails, { rejectWithValue }) => {
     try {
       const response = await orderService.createOrder(orderDetails);
-      return response.data;
+      return response;
     } catch (error) {
       return rejectWithValue(error.message || "Failed to create order.");
     }
