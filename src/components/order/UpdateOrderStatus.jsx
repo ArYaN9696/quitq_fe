@@ -24,7 +24,7 @@ const UpdateOrderStatus = () => {
         })
       );
       toast.success("Order status updated successfully!");
-      dispatch(fetchUserOrders());
+      await dispatch(fetchUserOrders());
       setOrderId("");
       setStatusId("");
     } catch (error) {
