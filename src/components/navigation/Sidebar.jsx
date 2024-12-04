@@ -126,6 +126,34 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         </li>
       );
     }
+    if (["admin", "seller"].includes(auth.userRole)) {
+      links.push(
+        <li className="nav-item" key="addprod">
+          <Link className="nav-link text-white" to="/add-product">
+            Add Product
+          </Link>
+        </li>
+      );
+    }
+    if (["admin", "seller"].includes(auth.userRole)) {
+      links.push(
+        <li className="nav-item" key="editprod">
+          <Link className="nav-link text-white" to="/edit-product/:productId">
+            Edit Product
+          </Link>
+        </li>
+      );
+    }
+    if (["admin", "seller"].includes(auth.userRole)) {
+      links.push(
+        <li className="nav-item" key="idprod">
+          <Link className="nav-link text-white" to="/product/:productId">
+            View Product
+          </Link>
+        </li>
+      );
+    }
+
 
     return links;
   };
