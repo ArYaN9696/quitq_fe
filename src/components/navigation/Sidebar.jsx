@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 
@@ -36,7 +36,6 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
   const renderLinks = () => {
     if (!auth.token) {
-      // User not logged in
       return (
         <>
           <li className="nav-item">
@@ -53,7 +52,6 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       );
     }
 
-    // User logged in
     const links = [];
     if (["admin", "seller", "customer"].includes(auth.userRole)) {
       links.push(
@@ -73,6 +71,13 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           </Link>
         </li>
       );
+      links.push(
+        <li className="nav-item" key="update-order-status">
+          <Link className="nav-link text-white" to="/update-order-status">
+            Update Order Status
+          </Link>
+        </li>
+      );
     }
 
     if (auth.userRole === "customer") {
@@ -80,6 +85,16 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         <li className="nav-item" key="cart">
           <Link className="nav-link text-white" to="/cart">
             Cart
+          </Link>
+        </li>
+      );
+    }
+
+    if (["admin", "customer"].includes(auth.userRole)) {
+      links.push(
+        <li className="nav-item" key="order-history">
+          <Link className="nav-link text-white" to="/order-history">
+            Order History
           </Link>
         </li>
       );
@@ -102,28 +117,11 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       );
     }
 
-    if (["admin", "customer"].includes(auth.userRole)) {
-      links.push(
-        <li className="nav-item" key="order-history">
-          <Link className="nav-link text-white" to="/order-history">
-            Order History
-          </Link>
-        </li>
-      );
-    }
-
     if (["admin", "seller"].includes(auth.userRole)) {
       links.push(
         <li className="nav-item" key="report">
           <Link className="nav-link text-white" to="/report">
             Reports
-          </Link>
-        </li>
-      );
-      links.push(
-        <li className="nav-item" key="update-order-status">
-          <Link className="nav-link text-white" to="/update-order-status">
-            Update Order Status
           </Link>
         </li>
       );
