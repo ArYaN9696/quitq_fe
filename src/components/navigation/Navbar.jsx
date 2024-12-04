@@ -1,10 +1,19 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { ToastContainer } from "react-toastify";
 
 const Navbar = ({ toggleSidebar }) => {
   const { auth, logout } = useAuth();
+  const [searchTerm, setSearchTerm] = useState(""); // State for search input
+  const navigate = useNavigate();
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/products?search=${encodeURIComponent(searchTerm)}`); // Navigate with search query
+    }
+  };
 
   return (
     <nav
@@ -29,6 +38,20 @@ const Navbar = ({ toggleSidebar }) => {
           QuitQ
         </Link>
 
+        <form className="d-flex me-auto" onSubmit={handleSearch}>
+          <input
+            className="form-control me-2"
+            type="search"
+            placeholder="Search products"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            aria-label="Search"
+          />
+          <button className="btn btn-outline-light" type="submit">
+            Search
+          </button>
+        </form>
+
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
@@ -38,7 +61,7 @@ const Navbar = ({ toggleSidebar }) => {
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/cart">
-              🛒
+                🛒
               </Link>
             </li>
             {auth.token ? (
