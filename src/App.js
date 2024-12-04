@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import ProductList from "./components/product/ProductList";
+import ProductsPage from "./components/product/ProductsPage.jsx";
 import ProductDetails from "./components/product/ProductDetails";
 import AddProduct from "./components/product/AddProduct";
 import EditProduct from "./components/product/EditProduct";
@@ -56,7 +56,7 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
-                <Route path="/products" element={<ProductList />} />
+                <Route path="/products" element={<ProductsPage />} />
                 <Route path="/product/:productId" element={<ProductDetails />} />
 
                 {/* Protected Routes */}

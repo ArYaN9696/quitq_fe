@@ -1,5 +1,5 @@
 import React from 'react';
-import ProductList from '../components/product/ProductList';
+import ProductsPage from '../components/product/ProductsPage';
 const Dashboard = () => {
 
   
