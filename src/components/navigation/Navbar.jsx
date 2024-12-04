@@ -6,41 +6,29 @@ import "../cust_CSS/navbar.css";
 
 const Navbar = ({ toggleSidebar }) => {
   const { auth, logout } = useAuth();
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
-  const handleSearchChange = (e) => {
-    const query = e.target.value;
-    setSearchQuery(query);
-
-    if (query === "") {
-      navigate("/products"); // Reset to show all products when search is cleared
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/products?search=${encodeURIComponent(searchTerm)}`);
     }
   };
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      navigate(`/products?search=${encodeURIComponent(searchTerm)}`); // Navigate with search query
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchTerm(query);
+
+    // If search is cleared, reset the URL to show all products
+    if (query === "") {
+      navigate("/products");
     }
   };
 
   return (
-    <nav
-      className="navbar navbar-expand-lg navbar-dark bg-dark"
-      style={{ position: "fixed", top: 0, width: "100%", zIndex: 999 }}
-    >
-      <button
-        className="btn btn-outline-light"
-        onClick={toggleSidebar}
-        style={{
-          fontSize: "24px",
-          border: "none",
-          background: "transparent",
-          padding: "0",
-          marginRight: "10px",
-        }}
-      >
+    <nav className="navbar navbar-expand-lg">
+      <button className="btn sidebar-toggle" onClick={toggleSidebar}>
         ☰
       </button>
       <div className="container-fluid">
@@ -48,16 +36,16 @@ const Navbar = ({ toggleSidebar }) => {
           QuitQ
         </Link>
 
-        <form className="d-flex me-auto" onSubmit={handleSearch}>
+        <form className="search-form" onSubmit={handleSearch}>
           <input
             className="form-control search-input"
             type="search"
-            placeholder="Search"
-            aria-label="Search"
-            value={searchQuery}
+            placeholder="Search products"
+            value={searchTerm}
             onChange={handleSearchChange}
+            aria-label="Search"
           />
-          <button className="btn btn-outline-light" type="submit">
+          <button className="btn search-btn" type="submit">
             Search
           </button>
         </form>
