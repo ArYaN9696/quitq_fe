@@ -72,7 +72,7 @@ const OrderHistory = () => {
               {orders.map((order) => (
                 <tr key={order.orderId}>
                   <td>{order.orderId}</td>
-                  <td>{formatDate(order.orderDate)}</td>
+                  <td>{formatDate(order.paymentDate)}</td>
                   <td>₹{order.totalAmount.toFixed(2)}</td>
                   <td>{statusMapping[order.statusId] || "Unknown"}</td>
                   {userRole === "seller" && (
