@@ -6,19 +6,41 @@ import "../cust_CSS/navbar.css";
 
 const Navbar = ({ toggleSidebar }) => {
   const { auth, logout } = useAuth();
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
-  const handleSearch = (e) => {
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    if (query === "") {
+      navigate("/products"); // Reset to show all products when search is cleared
+    }
+  };
+
+  const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
-      navigate(`/products?search=${encodeURIComponent(searchTerm)}`);
+      navigate(`/products?search=${encodeURIComponent(searchTerm)}`); // Navigate with search query
     }
   };
 
   return (
-    <nav className="navbar navbar-expand-lg">
-      <button className="btn sidebar-toggle" onClick={toggleSidebar}>
+    <nav
+      className="navbar navbar-expand-lg navbar-dark bg-dark"
+      style={{ position: "fixed", top: 0, width: "100%", zIndex: 999 }}
+    >
+      <button
+        className="btn btn-outline-light"
+        onClick={toggleSidebar}
+        style={{
+          fontSize: "24px",
+          border: "none",
+          background: "transparent",
+          padding: "0",
+          marginRight: "10px",
+        }}
+      >
         ☰
       </button>
       <div className="container-fluid">
@@ -26,16 +48,16 @@ const Navbar = ({ toggleSidebar }) => {
           QuitQ
         </Link>
 
-        <form className="search-form" onSubmit={handleSearch}>
+        <form className="d-flex me-auto" onSubmit={handleSearch}>
           <input
             className="form-control search-input"
             type="search"
-            placeholder="Search products"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search"
             aria-label="Search"
+            value={searchQuery}
+            onChange={handleSearchChange}
           />
-          <button className="btn search-btn" type="submit">
+          <button className="btn btn-outline-light" type="submit">
             Search
           </button>
         </form>
