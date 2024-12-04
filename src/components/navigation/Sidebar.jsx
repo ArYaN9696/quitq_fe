@@ -36,7 +36,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
   const renderLinks = () => {
     if (!auth.token) {
-      // user not logged in
+      // User not logged in
       return (
         <>
           <li className="nav-item">
@@ -53,7 +53,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       );
     }
 
-    // user logGed In
+    // User logged in
     const links = [];
     if (["admin", "seller", "customer"].includes(auth.userRole)) {
       links.push(
@@ -64,6 +64,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         </li>
       );
     }
+
     if (["seller", "admin"].includes(auth.userRole)) {
       links.push(
         <li className="nav-item" key="products">
@@ -73,6 +74,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         </li>
       );
     }
+
     if (auth.userRole === "customer") {
       links.push(
         <li className="nav-item" key="cart">
@@ -81,23 +83,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           </Link>
         </li>
       );
-    //   links.push(
-    //     <li className="nav-item" key="checkout">
-    //       <Link className="nav-link text-white" to="/checkout">
-    //         Checkout
-    //       </Link>
-    //     </li>
-    //   );
-    // }
-    // if (auth.userRole === "customer") {
-    //   links.push(
-    //     <li className="nav-item" key="process-payment">
-    //       <Link className="nav-link text-white" to="/process-payment">
-    //         Payment
-    //       </Link>
-    //     </li>
-    //   );
     }
+
     if (["seller", "admin"].includes(auth.userRole)) {
       links.push(
         <li className="nav-item" key="validate-payment">
@@ -114,6 +101,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         </li>
       );
     }
+
     if (["admin", "customer"].includes(auth.userRole)) {
       links.push(
         <li className="nav-item" key="order-history">
@@ -123,11 +111,19 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         </li>
       );
     }
+
     if (["admin", "seller"].includes(auth.userRole)) {
       links.push(
         <li className="nav-item" key="report">
           <Link className="nav-link text-white" to="/report">
             Reports
+          </Link>
+        </li>
+      );
+      links.push(
+        <li className="nav-item" key="update-order-status">
+          <Link className="nav-link text-white" to="/update-order-status">
+            Update Order Status
           </Link>
         </li>
       );
@@ -156,82 +152,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     >
       <div className="p-3">
         <ul className="nav flex-column">
-          {/* <li className="nav-item">
-            <Link className="nav-link text-white" to="/dashboard">
-              Dashboard
-            </Link>
-          </li> */}
-          {auth.token ? (
-            <>
-              <li className="nav-item">
-                <Link className="nav-link text-white" to="/category-page">
-                  Categories
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link text-white" to="/products">
-                  Products
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link text-white" to="/cart">
-                  Cart
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link text-white" to="/process-payment">
-                  Payment
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link text-white" to="/validate-payment">
-                  Validate Payment
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link text-white" to="/payments-by-order">
-                  Payments By Order Id
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link text-white" to="/order-history">
-                  Order History
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link text-white" to="/checkout">
-                  Checkout
-                </Link>
-              </li>
-              {(auth.userRole === "admin" || auth.userRole === "seller") && (
-                <li className="nav-item">
-                  <Link className="nav-link text-white" to="/report">
-                    Reports
-                  </Link>
-                </li> &&
-                <li className="nav-item">
-                <Link className="nav-link text-white" to="/update-order-status">
-                  Update Order Status
-                </Link>
-              </li>
-              )}
-            </>
-          ) : (
-            <>
-              <li className="nav-item">
-                <Link className="nav-link text-white" to="/login">
-                  Login
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link text-white" to="/register">
-                  Register
-                </Link>
-              </li>
-            </>
-          )}
+          {/* Dynamically rendered links */}
+          {renderLinks()}
         </ul>
-        <ul className="nav flex-column">{renderLinks()}</ul>
       </div>
     </div>
   );
