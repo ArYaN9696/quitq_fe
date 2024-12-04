@@ -3,6 +3,8 @@ import { addToCart } from '../../services/cartService';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
+
 const ProductCard = ({ product }) => {
   const [quantity, setQuantity] = useState(1); // Default quantity
 

@@ -2,35 +2,23 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { ToastContainer } from "react-toastify";
+import "../cust_CSS/navbar.css";
 
 const Navbar = ({ toggleSidebar }) => {
   const { auth, logout } = useAuth();
-  const [searchTerm, setSearchTerm] = useState(""); // State for search input
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
-      navigate(`/products?search=${encodeURIComponent(searchTerm)}`); // Navigate with search query
+      navigate(`/products?search=${encodeURIComponent(searchTerm)}`);
     }
   };
 
   return (
-    <nav
-      className="navbar navbar-expand-lg navbar-dark bg-dark"
-      style={{ position: "fixed", top: 0, width: "100%", zIndex: 999 }}
-    >
-      <button
-        className="btn btn-outline-light"
-        onClick={toggleSidebar}
-        style={{
-          fontSize: "24px",
-          border: "none",
-          background: "transparent",
-          padding: "0",
-          marginRight: "10px",
-        }}
-      >
+    <nav className="navbar navbar-expand-lg">
+      <button className="btn sidebar-toggle" onClick={toggleSidebar}>
         ☰
       </button>
       <div className="container-fluid">
@@ -38,24 +26,24 @@ const Navbar = ({ toggleSidebar }) => {
           QuitQ
         </Link>
 
-        <form className="d-flex me-auto" onSubmit={handleSearch}>
+        <form className="search-form" onSubmit={handleSearch}>
           <input
-            className="form-control me-2"
+            className="form-control search-input"
             type="search"
             placeholder="Search products"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             aria-label="Search"
           />
-          <button className="btn btn-outline-light" type="submit">
+          <button className="btn search-btn" type="submit">
             Search
           </button>
         </form>
 
-        <div className="collapse navbar-collapse" id="navbarNav">
+        <div className="collapse navbar-collapse">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
-              <Link className="nav-link active" to="/products">
+              <Link className="nav-link active text-white" to="/products">
                 Home
               </Link>
             </li>

@@ -8,13 +8,22 @@ const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [priceFilter, setPriceFilter] = useState({ min: 0, max: Infinity });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const searchQuery = new URLSearchParams(location.search).get("search") || "";
 
   useEffect(() => {
     const loadProducts = async () => {
-      const fetchedProducts = await getAllProducts(); // Replace with API call to fetch products
-      setProducts(fetchedProducts);
+      try {
+        const fetchedProducts = await getAllProducts(); // Replace with API call to fetch products
+        setProducts(fetchedProducts);
+      } catch (error) {
+        setError("Failed to load products");
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
     };
     loadProducts();
   }, []);
@@ -22,7 +31,12 @@ const ProductsPage = () => {
   useEffect(() => {
     if (!searchQuery) {
       // If no search query, show all products
-      setFilteredProducts(products.filter((product) => product.price >= priceFilter.min && product.price <= priceFilter.max));
+      setFilteredProducts(
+        products.filter(
+          (product) =>
+            product.price >= priceFilter.min && product.price <= priceFilter.max
+        )
+      );
     } else {
       // Filter products based on search query and price filter
       const filtered = products.filter((product) => {
@@ -36,6 +50,9 @@ const ProductsPage = () => {
       setFilteredProducts(filtered);
     }
   }, [searchQuery, priceFilter, products]);
+
+  if (loading) return <div>Loading products...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <div className="container mt-5">
@@ -51,7 +68,10 @@ const ProductsPage = () => {
             value={priceFilter.min}
             onChange={(e) => {
               const value = e.target.value;
-              setPriceFilter({ ...priceFilter, min: value === "" ? 0 : Number(value) });
+              setPriceFilter({
+                ...priceFilter,
+                min: value === "" ? 0 : Number(value),
+              });
             }}
             placeholder="Min"
           />

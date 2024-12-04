@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import "../cust_CSS/sidebar.css"; // Make sure to import the custom CSS for sidebar
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const { auth } = useAuth();
@@ -39,12 +40,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       return (
         <>
           <li className="nav-item">
-            <Link className="nav-link text-white" to="/login">
+            <Link className="nav-link" to="/login">
               Login
             </Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link text-white" to="/register">
+            <Link className="nav-link" to="/register">
               Register
             </Link>
           </li>
@@ -56,7 +57,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     if (["admin", "seller", "customer"].includes(auth.userRole)) {
       links.push(
         <li className="nav-item" key="categories">
-          <Link className="nav-link text-white" to="/category-page">
+          <Link className="nav-link" to="/category-page">
             Categories
           </Link>
         </li>
@@ -66,14 +67,14 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     if (["seller", "admin"].includes(auth.userRole)) {
       links.push(
         <li className="nav-item" key="products">
-          <Link className="nav-link text-white" to="/products">
+          <Link className="nav-link" to="/products">
             Products
           </Link>
         </li>
       );
       links.push(
         <li className="nav-item" key="update-order-status">
-          <Link className="nav-link text-white" to="/update-order-status">
+          <Link className="nav-link" to="/update-order-status">
             Update Order Status
           </Link>
         </li>
@@ -83,7 +84,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     if (auth.userRole === "customer") {
       links.push(
         <li className="nav-item" key="cart">
-          <Link className="nav-link text-white" to="/cart">
+          <Link className="nav-link" to="/cart">
             Cart
           </Link>
         </li>
@@ -93,7 +94,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     if (["admin", "customer"].includes(auth.userRole)) {
       links.push(
         <li className="nav-item" key="order-history">
-          <Link className="nav-link text-white" to="/order-history">
+          <Link className="nav-link" to="/order-history">
             Order History
           </Link>
         </li>
@@ -103,14 +104,14 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     if (["seller", "admin"].includes(auth.userRole)) {
       links.push(
         <li className="nav-item" key="validate-payment">
-          <Link className="nav-link text-white" to="/validate-payment">
+          <Link className="nav-link" to="/validate-payment">
             Validate Payment
           </Link>
         </li>
       );
       links.push(
         <li className="nav-item" key="payments-by-order">
-          <Link className="nav-link text-white" to="/payments-by-order">
+          <Link className="nav-link" to="/payments-by-order">
             Payments By Order ID
           </Link>
         </li>
@@ -120,40 +121,42 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     if (["admin", "seller"].includes(auth.userRole)) {
       links.push(
         <li className="nav-item" key="report">
-          <Link className="nav-link text-white" to="/report">
+          <Link className="nav-link" to="/report">
             Reports
           </Link>
         </li>
       );
     }
+
     if (["admin", "seller"].includes(auth.userRole)) {
       links.push(
         <li className="nav-item" key="addprod">
-          <Link className="nav-link text-white" to="/add-product">
+          <Link className="nav-link" to="/add-product">
             Add Product
           </Link>
         </li>
       );
     }
+
     if (["admin", "seller"].includes(auth.userRole)) {
       links.push(
         <li className="nav-item" key="editprod">
-          <Link className="nav-link text-white" to="/edit-product/:productId">
+          <Link className="nav-link" to="/edit-product/:productId">
             Edit Product
           </Link>
         </li>
       );
     }
+
     if (["admin", "seller"].includes(auth.userRole)) {
       links.push(
         <li className="nav-item" key="idprod">
-          <Link className="nav-link text-white" to="/product/:productId">
+          <Link className="nav-link" to="/product/:productId">
             View Product
           </Link>
         </li>
       );
     }
-
 
     return links;
   };
@@ -161,20 +164,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   return (
     <div
       ref={sidebarRef}
-      className={`sidebar bg-dark text-white ${
-        isOpen ? "d-block" : "d-none d-md-block"
-      }`}
-      style={{
-        position: "absolute",
-        top: "56px",
-        left: "0",
-        width: "250px",
-        height: "calc(100vh - 56px)",
-        paddingTop: "20px",
-        zIndex: 1000,
-        transition: "transform 0.3s ease-in-out",
-        transform: isOpen ? "translateX(0)" : "translateX(-100%)",
-      }}
+      className={`sidebar ${isOpen ? "d-block" : "d-none d-md-block"}`}
     >
       <div className="p-3">
         <ul className="nav flex-column">
