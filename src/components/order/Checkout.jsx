@@ -4,6 +4,7 @@ import { createOrder } from "../../store/orderSlice";
 import { useNavigate } from "react-router-dom";
 import { clearCartThunk } from "../../store/cartSlice";
 import useAuth from "../../hooks/useAuth";
+import '../cust_CSS/checkout.css';
 
 const Checkout = () => {
   const dispatch = useDispatch();
@@ -56,7 +57,6 @@ const Checkout = () => {
 
       await dispatch(clearCartThunk()).unwrap();
 
-      // Redirect to the Process Payment page with orderId, paymentMethod, and amount
       navigate(
         `/process-payment?orderId=${orderResponse.orderId}&paymentMethod=${paymentMethod}&amount=${totalAmount}`
       );
@@ -85,7 +85,7 @@ const Checkout = () => {
   ];
 
   return (
-    <div className="container mt-5">
+    <div className="checkout container mt-5">  {/* Scoped class applied */}
       <h1 className="mb-4 text-center">Checkout</h1>
 
       <div className="card mb-4">

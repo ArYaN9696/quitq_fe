@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { getProductById } from "../../services/productService";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "../cust_CSS/productsDetails.css"
 
 const ProductDetails = () => {
   const [productId, setProductId] = useState("");

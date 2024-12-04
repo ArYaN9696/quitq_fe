@@ -9,6 +9,7 @@ import {
 } from '../../store/cartSlice';
 import useAuth from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import '../cust_CSS/cart.css'
 
 const Cart = () => {
   const { auth } = useAuth();

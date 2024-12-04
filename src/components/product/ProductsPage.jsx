@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { getAllProducts } from "../../services/productService";
 import ProductCard from "../product/ProductCard";
+import "../cust_CSS/ProductsPage.css";
 
 const ProductsPage = () => {
   const location = useLocation();

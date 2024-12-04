@@ -20,7 +20,6 @@ const Navbar = ({ toggleSidebar }) => {
     const query = e.target.value;
     setSearchTerm(query);
 
-    // If search is cleared, reset the URL to show all products
     if (query === "") {
       navigate("/products");
     }
@@ -75,13 +74,13 @@ const Navbar = ({ toggleSidebar }) => {
               </>
             ) : (
               <>
-                <li className="nav-item">
+                <li className="nav-item text-white">
                   <Link className="nav-link" to="/login">
                     Login
                   </Link>
                 </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/register">
+                <li className="nav-item text-white">
+                  <Link className="nav-link text-white" to="/register">
                     Register
                   </Link>
                 </li>

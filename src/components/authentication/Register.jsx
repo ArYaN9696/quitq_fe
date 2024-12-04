@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import authService from '../../services/authService'; 
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../cust_CSS/login.css';
+//import '../cust_CSS/login.css';
+
 const Register = () => {
   const [formData, setFormData] = useState({
     userName: '',

@@ -1,0 +1,152 @@
+.checkout {
+  background-color: #f8f9fa;
+}
+
+.checkout .container {
+  margin-top: 30px;
+}
+
+.checkout h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.checkout .card {
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.checkout .card-body {
+  padding: 20px;
+}
+
+.checkout h2.h5 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #34495e;
+}
+
+.checkout textarea.form-control {
+  font-size: 1rem;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.checkout select.form-select {
+  font-size: 1rem;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.checkout .list-group-item {
+  padding: 12px 15px;
+  font-size: 1rem;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+
+.checkout .list-group-item small {
+  color: #7f8c8d;
+}
+
+.checkout .list-group-item .badge {
+  font-size: 1rem;
+}
+
+.checkout .list-group-item .badge.bg-primary {
+  background-color: #3498db;
+  color: #fff;
+}
+
+.checkout .d-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.checkout .d-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.checkout .d-grid .btn {
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 12px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.checkout .btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+.checkout .btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.checkout .mt-4 {
+  margin-top: 2rem;
+}
+
+.checkout .mb-4 {
+  margin-bottom: 1.5rem;
+}
+
+.checkout .mb-3 {
+  margin-bottom: 1rem;
+}
+
+.checkout h2.h5.mb-3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.checkout .card-body p {
+  font-size: 1rem;
+  color: #7f8c8d;
+}
+
+.checkout .card-body .list-group-item {
+  border-radius: 4px;
+}
+
+.checkout .card-body .badge {
+  padding: 6px 12px;
+}
+
+.checkout .d-flex.justify-content-between {
+  margin-top: 10px;
+}
+
+.checkout .d-flex.justify-content-between strong {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.checkout .d-flex.justify-content-between span {
+  font-size: 1.1rem;
+}
+
+@media (max-width: 576px) {
+  .checkout .container {
+    padding: 10px;
+  }
+
+  .checkout .btn {
+    font-size: 0.95rem;
+  }
+
+  .checkout .list-group-item {
+    font-size: 0.9rem;
+  }
+
+  .checkout .d-flex.justify-content-between {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

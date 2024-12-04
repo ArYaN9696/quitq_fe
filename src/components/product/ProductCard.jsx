@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { addToCart } from '../../services/cartService';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import "../cust_CSS/productsCard.css";
 
 
 const ProductCard = ({ product }) => {

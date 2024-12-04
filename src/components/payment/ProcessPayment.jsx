@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { processPayment } from "../../services/paymentService";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import '.././cust_CSS/payments.css'; 
 
 const ProcessPayment = () => {
   const [searchParams] = useSearchParams();
@@ -70,7 +71,7 @@ const ProcessPayment = () => {
   ];
 
   return (
-    <form onSubmit={handleSubmit} className="container mt-4">
+    <form onSubmit={handleSubmit} className="process-payment container mt-4">
       <h2>Process Payment</h2>
       <div className="mb-3">
         <label>Order ID</label>
