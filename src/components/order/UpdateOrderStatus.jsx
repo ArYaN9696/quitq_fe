@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { updateOrderStatus } from "../../store/orderSlice";
+import { updateOrderStatus, fetchUserOrders } from "../../store/orderSlice";
 import { toast } from "react-toastify";
 
 const UpdateOrderStatus = () => {
@@ -24,6 +24,7 @@ const UpdateOrderStatus = () => {
         })
       );
       toast.success("Order status updated successfully!");
+      dispatch(fetchUserOrders());
       setOrderId("");
       setStatusId("");
     } catch (error) {
