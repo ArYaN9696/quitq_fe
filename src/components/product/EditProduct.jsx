@@ -1,145 +1,164 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { getProductById, updateProduct } from '../../services/productService';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { getProductById,updateProduct } from "../../services/productService";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const EditProduct = () => {
-  const { productId } = useParams(); // Extract productId from the route
-  const [product, setProduct] = useState(null); // Product state starts as null
-  const [loading, setLoading] = useState(true); // Track loading state
-  const [error, setError] = useState(null); // Track errors
+  const [productId, setProductId] = useState("");
+  const [product, setProduct] = useState(null);
+  const [isFetching, setIsFetching] = useState(false);
+  const navigate = useNavigate();
 
-  // Fetch product details when component loads
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const response = await getProductById(productId);
-        setProduct(response.data); // Set fetched product data
-        setLoading(false); // Set loading to false
-      } catch (error) {
-        console.error('Error fetching product for edit:', error);
-        setError('Failed to fetch product data.');
-        setLoading(false); // Set loading to false even on error
-      }
-    };
-    fetchProduct();
-  }, [productId]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProduct((prevProduct) => ({ ...prevProduct, [name]: value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const productData = {
-      ProductName: product.name,
-      Description: product.description,
-      Price: parseFloat(product.price),
-      Stock: parseInt(product.stock, 10),
-      ImageUrl: product.imageUrl || '',
-      SubcategoryId: parseInt(product.subcategoryId, 10),
-    };
+  const handleFetchProduct = async () => {
+    if (!productId) {
+      toast.error("Please enter a valid Product ID.", { position: "top-right" });
+      return;
+    }
 
     try {
-      console.log('Submitting updated product:', productData);
-      const response = await updateProduct(productId, productData);
-      alert('Product updated successfully!');
+      setIsFetching(true);
+      const fetchedProduct = await getProductById(productId);
+      setProduct(fetchedProduct);
+      setIsFetching(false);
     } catch (error) {
-      console.error('Error updating product:', error);
-      alert(error.message || 'Failed to update product. Please try again.');
+      console.error("Error fetching product details:", error);
+      toast.error(error.message || "Failed to fetch product details.", { position: "top-right" });
+      setIsFetching(false);
     }
   };
 
-  if (loading) return <div className="text-center mt-4">Loading...</div>;
-  if (error) return <div className="alert alert-danger mt-4">{error}</div>;
+  const handleUpdateProduct = async (e) => {
+    e.preventDefault();
+
+    if (!product) {
+      toast.error("No product loaded to update.", { position: "top-right" });
+      return;
+    }
+
+    try {
+      await updateProduct(productId, product);
+      toast.success("Product updated successfully!", { position: "top-right" });
+      navigate("/products"); // Navigate back to products page
+    } catch (error) {
+      console.error("Error updating product:", error);
+      toast.error(error.message || "Failed to update product.", { position: "top-right" });
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setProduct({ ...product, [name]: value });
+  };
 
   return (
     <div className="container mt-5">
-      <div className="card p-4">
-        <h2 className="text-center mb-4">Edit Product</h2>
-        <form onSubmit={handleSubmit}>
+      <h2 className="text-center mb-4">Edit Product</h2>
+
+      {/* Fetch Product Section */}
+      {!product && (
+        <div className="card p-4 shadow-lg" style={{ maxWidth: "500px", margin: "0 auto" }}>
           <div className="mb-3">
-            <label htmlFor="name" className="form-label">Product Name</label>
+            <label htmlFor="productId" className="form-label">
+              Product ID
+            </label>
+            <input
+              type="number"
+              id="productId"
+              className="form-control"
+              value={productId}
+              onChange={(e) => setProductId(e.target.value)}
+              placeholder="Enter the Product ID"
+              required
+            />
+          </div>
+          <button
+            className="btn btn-primary w-100"
+            onClick={handleFetchProduct}
+            disabled={isFetching}
+          >
+            {isFetching ? "Fetching..." : "Fetch Product"}
+          </button>
+        </div>
+      )}
+
+      {/* Edit Product Section */}
+      {product && (
+        <form onSubmit={handleUpdateProduct} className="card p-4 shadow-lg mt-4">
+          <div className="mb-3">
+            <label htmlFor="productName" className="form-label">
+              Product Name
+            </label>
             <input
               type="text"
-              name="name"
-              id="name"
+              id="productName"
+              name="productName"
               className="form-control"
-              placeholder="Name"
-              value={product?.name || ''}
+              value={product.productName || ""}
               onChange={handleChange}
               required
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="description" className="form-label">Description</label>
+            <label htmlFor="description" className="form-label">
+              Description
+            </label>
             <textarea
-              name="description"
               id="description"
+              name="description"
               className="form-control"
-              placeholder="Description"
-              value={product?.description || ''}
+              value={product.description || ""}
               onChange={handleChange}
               required
-            />
+            ></textarea>
           </div>
           <div className="mb-3">
-            <label htmlFor="price" className="form-label">Price</label>
+            <label htmlFor="price" className="form-label">
+              Price
+            </label>
             <input
               type="number"
-              name="price"
               id="price"
+              name="price"
               className="form-control"
-              placeholder="Price"
-              value={product?.price || 0}
+              value={product.price || ""}
               onChange={handleChange}
               required
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="stock" className="form-label">Stock</label>
+            <label htmlFor="stock" className="form-label">
+              Stock
+            </label>
             <input
               type="number"
-              name="stock"
               id="stock"
+              name="stock"
               className="form-control"
-              placeholder="Stock"
-              value={product?.stock || 0}
+              value={product.stock || ""}
               onChange={handleChange}
               required
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="subcategoryId" className="form-label">Subcategory ID</label>
-            <input
-              type="number"
-              name="subcategoryId"
-              id="subcategoryId"
-              className="form-control"
-              placeholder="Subcategory ID"
-              value={product?.subcategoryId || ''}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="imageUrl" className="form-label">Image URL</label>
+            <label htmlFor="imageUrl" className="form-label">
+              Image URL
+            </label>
             <input
               type="text"
-              name="imageUrl"
               id="imageUrl"
+              name="imageUrl"
               className="form-control"
-              placeholder="Image URL"
-              value={product?.imageUrl || ''}
+              value={product.imageUrl || ""}
               onChange={handleChange}
+              required
             />
           </div>
-          <div className="text-center">
-            <button type="submit" className="btn btn-primary">Update Product</button>
-          </div>
+          <button type="submit" className="btn btn-success w-100">
+            Update Product
+          </button>
         </form>
-      </div>
+      )}
     </div>
   );
 };
