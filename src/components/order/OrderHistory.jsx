@@ -30,6 +30,15 @@ const OrderHistory = () => {
     return isNaN(date) ? "Invalid Date" : date.toLocaleDateString();
   };
 
+  // Status mapping
+  const statusMapping = {
+    1: "Pending",
+    2: "Processing",
+    3: "Shipped",
+    4: "Delivered",
+    5: "Cancelled",
+  };
+
   if (status === "loading") {
     return (
       <div className="text-center mt-5">
@@ -65,7 +74,7 @@ const OrderHistory = () => {
                   <td>{order.orderId}</td>
                   <td>{formatDate(order.orderDate)}</td>
                   <td>₹{order.totalAmount.toFixed(2)}</td>
-                  <td>{order.status || "Pending"}</td>
+                  <td>{statusMapping[order.statusId] || "Unknown"}</td>
                   {userRole === "seller" && (
                     <td>
                       <button
