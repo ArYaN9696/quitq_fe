@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 
 const OrderHistory = () => {
   const dispatch = useDispatch();
-  const orders = useSelector(selectOrders);
+  const orders = useSelector(selectOrders) || []; // Ensure it's always an array
   const status = useSelector(selectOrderStatus);
   const error = useSelector(selectOrderError);
   const userRole = localStorage.getItem("userRole");
@@ -30,7 +30,6 @@ const OrderHistory = () => {
     return isNaN(date) ? "Invalid Date" : date.toLocaleDateString();
   };
 
-  // Status mapping
   const statusMapping = {
     1: "Pending",
     2: "Processing",
@@ -49,7 +48,7 @@ const OrderHistory = () => {
     );
   }
 
-  const isOrdersEmpty = !orders || orders.length === 0;
+  const isOrdersEmpty = orders.length === 0;
 
   return (
     <div className="container mt-5">
@@ -71,7 +70,7 @@ const OrderHistory = () => {
             <tbody>
               {orders.map((order) => (
                 <tr key={order.orderId}>
-                  <td>{order.orderId}</td>
+                  <td>{order.orderId || "N/A"}</td>
                   <td>{formatDate(order.paymentDate)}</td>
                   <td>₹{order.totalAmount?.toFixed(2) || "0.00"}</td>
                   <td>{statusMapping[order.statusId] || "Unknown"}</td>

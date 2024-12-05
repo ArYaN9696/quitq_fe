@@ -69,7 +69,7 @@ export const createProduct = async (productData) => {
   try {
     // Send the POST request with only the product data
     const response = await api.post('/Product', productData);
-    return response.data; // Return the response from the backend
+    return response.data; 
   } catch (error) {
     console.error('Error creating product:', error);
     throw error.response?.data || 'An error occurred while creating the product';
